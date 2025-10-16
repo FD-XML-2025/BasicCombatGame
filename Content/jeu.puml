@@ -1,0 +1,77 @@
+@startuml
+' Classes
+
+' Boucle principale
+class Jeu {
+    - nom : String
+    - etagesTotal : int
+    - etageCourant : Etage
+    - joueur : Joueur
+    - enemies : List<Enemie>
+    - score : int
+    Start()
+    Update()
+}
+
+' Joueurs
+class Joueur {
+    - hp : double
+    - dmg : double
+    - arme : Arme 
+    Move()
+    Attack()
+    TakeDamage()
+}
+
+' Diagramme d'état d'un joueur? Attack -> Hurt -> Dead
+
+' Ennemis
+class Ennemie {
+    - hp : double
+    - type : String
+    Move()
+    Attack()
+    TakeDamage()
+}
+
+' Environnement de level
+class Etage {
+    - hauteur : double
+    - largeur : double  
+    - enemies : List<Ennemie>
+    Load()
+    CheckVictory()
+}
+
+' Armes
+class Arme {
+    - nom : String
+    - dmg : double
+    - range : double
+    Equip()
+}
+
+' Items
+class Item {
+    - nom : String
+    - type : String
+    ' objet de soin ou point bonus
+    Collect()
+}
+
+' Interface
+class HUD {
+    - HP : double
+    - score : int
+}
+
+' Relations
+' Game contient un Player, plusieurs Enemy, un Level et un HUD
+' Player peut posséder un arme et un item
+Jeu "1" --* "1" Joueur
+Jeu "1" --* "*" Etage
+Etage "1" --* "*" Ennemie
+Joueur "1" --* "1" Arme
+Joueur "1" --* "*" Item
+
+@enduml
