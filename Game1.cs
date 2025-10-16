@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using MonoGame.Extended.Graphics;
 
 namespace BasicCombatGame;
 
@@ -8,8 +9,8 @@ public class Game1 : Game
 {
     private GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch;
-    
-    private Texture2D _playerTexture;   // ton image
+
+    private Character _testcharacter;
     private Vector2 _playerPosition;
 
     public Game1()
@@ -26,6 +27,8 @@ public class Game1 : Game
         // TODO: Add your initialization logic here
         // Prépare les objets du jeu
 
+        _testcharacter = new Character();
+
         base.Initialize();
     }
 
@@ -35,6 +38,9 @@ public class Game1 : Game
 
         // Charger ton sprite (nom sans extension)
         //_playerTexture = Content.Load<Texture2D>("yakuza");
+        /*Texture2DAtlas atlas = Content.Load<Texture2DAtlas>("SpriteSheet/yakuza-male");
+        SpriteSheet spriteSheet = new SpriteSheet("SpriteSheet/yakuza-male", atlas);
+        _testcharacter.LoadContent(spriteSheet);*/
 
         // Position initiale
         _playerPosition = new Vector2(100, 100);
