@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<jeu>
+    <joueur>
+        <health>100</health>
+        <dmg>15</dmg>
+    </joueur>
+</jeu>

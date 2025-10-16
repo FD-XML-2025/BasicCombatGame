@@ -8,6 +8,7 @@ public class Game1 : Game
 {
     private GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch;
+    private Jeu _monJeu;
     
     private Texture2D _playerTexture;   // ton image
     private Vector2 _playerPosition;
@@ -25,20 +26,18 @@ public class Game1 : Game
     {
         // TODO: Add your initialization logic here
         // Prépare les objets du jeu
-
+        _monJeu = new Jeu();
+        _monJeu.Initialize();
         base.Initialize();
     }
 
     protected override void LoadContent()
     {
+        // TODO: use this.Content to load your game content here
+
         _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-        // Charger ton sprite (nom sans extension)
-        _playerTexture = Content.Load<Texture2D>("yakuza");
-
-        // Position initiale
-        _playerPosition = new Vector2(100, 100);
-        // TODO: use this.Content to load your game content here
+       _monJeu.LoadContent(Content);
     }
 
     protected override void Update(GameTime gameTime)
@@ -52,14 +51,7 @@ public class Game1 : Game
         // TODO: Add your update logic here
         var keyboard = Keyboard.GetState();
 
-        if (keyboard.IsKeyDown(Keys.Right))
-            _playerPosition.X += 3;
-        if (keyboard.IsKeyDown(Keys.Left))
-            _playerPosition.X -= 3;
-        if (keyboard.IsKeyDown(Keys.Up))
-            _playerPosition.Y -= 3;
-        if (keyboard.IsKeyDown(Keys.Down))
-            _playerPosition.Y += 3;
+        _monJeu.Update();
         
         base.Update(gameTime);
     }
@@ -70,7 +62,9 @@ public class Game1 : Game
 
         // TODO: Add your drawing code here
         _spriteBatch.Begin();
-        _spriteBatch.Draw(_playerTexture, _playerPosition, Color.White);
+        
+        _monJeu.Draw(_spriteBatch);
+        
         _spriteBatch.End();
 
         base.Draw(gameTime);

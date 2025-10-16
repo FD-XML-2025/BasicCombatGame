@@ -16,20 +16,21 @@
             <element name="nom" type="string"/>
             <element name="etagesTotal" type="int"/>
             <element name="etageCourant" type="jeu:Level" minOccurs="1"/> 
-            <element name="joueur" type="jeu:Character"/>
+            <element name="joueur" type="jeu:Joueur"/>
             <element name="enemies" type="jeu:Ennemies"/>
-            <element name="difficulty" type="jeu:Difficulty"/>
+            <!--<element name="difficulty" type="jeu:Difficulty"/>-->
             <element name="score" type="int"/>
         </sequence>
     </complexType>
     
     <!-- Classe charactérisant un personnage -->
-    <complexType name="Character">
+    <complexType name="Joueur">
         <sequence>
             <element name="name" type="string"/>
             <element name="health" type="float"/>
             <element name="agility" type="float"/>
             <element name="speed" type="float"/>
+            <element name="dmg" type="float"/>
             <element name="sprite" type="jeu:Sprite"/>
         </sequence>
     </complexType>
@@ -60,7 +61,7 @@
     <!-- Type de Sprite -->
     <simpleType name="Sprite">
         <restriction base="string">
-            <pattern value=""/>
+            
         </restriction>
     </simpleType>
 
@@ -102,21 +103,21 @@
         </restriction>
     </simpleType>
     
-    <!-- Liste des difficultés disponibles -->
+    <!-- Liste des difficultés disponibles 
     <complexType name="Difficulties">
         <sequence>
             <element name="difficulty" type="jeu:Difficulty"/>
         </sequence>
     </complexType>
-    
-    <!-- Classe caractérisant la difficulté -->
+     -->
+    <!-- Classe caractérisant la difficulté 
     <complexType name="Difficulty">
         <sequence>
             <element name="name" type="jeu:Difficulty"/>
             <element name="multiplier" type="float"/>
         </sequence>
     </complexType>
-    
+    -->
     <complexType name="Ennemies">
         <sequence>
             <element name="ennemie" type="jeu:Ennemie"/>

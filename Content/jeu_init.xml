@@ -1,0 +1,27 @@
+<jeux:jeu xmlns:jeux="http://www.univ-grenoble-alpes.fr/l3miage/jeux">
+  <jeux:nom>string</jeux:nom>
+  <jeux:etagesTotal>3</jeux:etagesTotal>
+  <jeux:etageCourant>
+    <jeux:name>string</jeux:name>
+    <jeux:duration>P1Y6M7DT23H11M22S</jeux:duration>
+    <jeux:chunks>
+      <jeux:sprite>yakuza.png</jeux:sprite>
+    </jeux:chunks>
+  </jeux:etageCourant>
+  <jeux:joueur>
+    <jeux:name>string</jeux:name>
+    <jeux:health>1.5E2</jeux:health>
+    <jeux:agility>1.5E2</jeux:agility>
+    <jeux:speed>1.5E2</jeux:speed>
+     <jeux:dmg>15</jeux:dmg>
+    <jeux:sprite>yakuza.jpg</jeux:sprite>
+  </jeux:joueur>
+  <jeux:enemies>
+    <jeux:ennemie>
+      <jeux:hp>1.051732E7</jeux:hp>
+      <jeux:dmg>1.051732E7</jeux:dmg>
+      <jeux:type>string</jeux:type>
+    </jeux:ennemie>
+  </jeux:enemies>
+  <jeux:score>3</jeux:score>
+</jeux:jeu>
