@@ -34,7 +34,7 @@ public class Game1 : Game
         _spriteBatch = new SpriteBatch(GraphicsDevice);
 
         // Charger ton sprite (nom sans extension)
-        _playerTexture = Content.Load<Texture2D>("yakuza");
+        //_playerTexture = Content.Load<Texture2D>("yakuza");
 
         // Position initiale
         _playerPosition = new Vector2(100, 100);
@@ -70,7 +70,7 @@ public class Game1 : Game
 
         // TODO: Add your drawing code here
         _spriteBatch.Begin();
-        _spriteBatch.Draw(_playerTexture, _playerPosition, Color.White);
+        //_spriteBatch.Draw(_playerTexture, _playerPosition, Color.White);
         _spriteBatch.End();
 
         base.Draw(gameTime);
