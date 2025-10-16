@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+        targetNamespace="http://www.univ-grenoble-alpes.fr/l3miage/jeux"
+        xmlns:jeu="http://www.univ-grenoble-alpes.fr/l3miage/jeux"
+        elementFormDefault="qualified">
+<!--
+
+-->    
+    <element name="jeu" type="jeu:Jeu">
+        <!-- Clé -->
+        
+    </element>
+    
+    <complexType name="Jeu">
+        <sequence>
+            <element name="nom" type="string"/>
+            <element name="etagesTotal" type="int"/>
+            <element name="etageCourant" type="jeu:Level" minOccurs="1"/> 
+            <element name="joueur" type="jeu:Character"/>
+            <element name="enemies" type="jeu:Ennemies"/>
+            <element name="difficulty" type="jeu:Difficulty"/>
+            <element name="score" type="int"/>
+        </sequence>
+    </complexType>
+    
+    <!-- Classe charactérisant un personnage -->
+    <complexType name="Character">
+        <sequence>
+            <element name="name" type="string"/>
+            <element name="health" type="float"/>
+            <element name="agility" type="float"/>
+            <element name="speed" type="float"/>
+            <element name="sprite" type="jeu:Sprite"/>
+        </sequence>
+    </complexType>
+    
+    <!-- Liste des niveaux de jeu -->
+    <complexType name="Levels">
+        <sequence>
+            <element name="level" type="jeu:Level"/>
+        </sequence>
+    </complexType>
+    
+    <!-- Classe d'un niveau de jeu -->
+    <complexType name="Level">
+        <sequence>
+            <element name="name" type="string"/>
+            <element name="duration" type="duration"/>
+            <element name="chunks" type="jeu:LevelChunk"/>
+        </sequence>
+    </complexType>
+    
+    <!-- Correspond à un bout du niveau de jeu (pour faire défiller les fonds) -->
+    <complexType name="LevelChunk">
+        <sequence>
+            <element name="sprite" type="jeu:Sprite"/>
+        </sequence>
+    </complexType>
+
+    <!-- Type de Sprite -->
+    <simpleType name="Sprite">
+        <restriction base="string">
+            <pattern value=""/>
+        </restriction>
+    </simpleType>
+
+    <!-- Type d'arme -->
+    <complexType name="Arme">
+        <sequence>
+            <element name="nom" type="string"/>
+            <element name="dmg" type="double"/>
+            <element name="range" type="double"/>
+        </sequence>
+    </complexType>
+
+    <!-- Classe caractérisant un item -->
+    <complexType name="Item">
+        <sequence>
+            <element name="name" type="string"/>
+            <element name="type" type="jeu:ItemType"/>
+            <element name="sprite" type="jeu:Sprite"/>
+        </sequence>
+    </complexType>
+    
+    <!-- Types d'item -->
+    <simpleType name="ItemType">
+        <restriction base="string">
+            <enumeration value="HEALTH"/>
+            <enumeration value="MONEY"/>
+            <enumeration value="WEAPON"/>
+        </restriction>
+    </simpleType>
+    
+    <!-- Types d'animation -->
+    <simpleType name="AnimationType">
+        <restriction base="string">
+            <enumeration value="IDLE"/>
+            <enumeration value="JUMP"/>
+            <enumeration value="WALK"/>
+            <enumeration value="PARRY"/>
+            <enumeration value="DODGE"/>
+        </restriction>
+    </simpleType>
+    
+    <!-- Liste des difficultés disponibles -->
+    <complexType name="Difficulties">
+        <sequence>
+            <element name="difficulty" type="jeu:Difficulty"/>
+        </sequence>
+    </complexType>
+    
+    <!-- Classe caractérisant la difficulté -->
+    <complexType name="Difficulty">
+        <sequence>
+            <element name="name" type="jeu:Difficulty"/>
+            <element name="multiplier" type="float"/>
+        </sequence>
+    </complexType>
+    
+    <complexType name="Ennemies">
+        <sequence>
+            <element name="ennemie" type="jeu:Ennemie"/>
+        </sequence>
+    </complexType>
+    
+    <complexType name="Ennemie">
+        <sequence>
+            <element name="hp" type="double"/>
+            <element name="dmg" type="double"/>
+            <element name="type" type="string"/>
+        </sequence>
+    </complexType>
+</schema>
+        
