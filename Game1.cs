@@ -25,9 +25,7 @@ public class Game1 : Game
     protected override void Initialize()
     {
         // TODO: Add your initialization logic here
-        // Prépare les objets du jeu
-
-        _testcharacter = new Character();
+        _testcharacter = new Character("SpriteSheet/female-yakuza", "yakuza-female");
 
         base.Initialize();
     }
@@ -35,16 +33,9 @@ public class Game1 : Game
     protected override void LoadContent()
     {
         _spriteBatch = new SpriteBatch(GraphicsDevice);
-
-        // Charger ton sprite (nom sans extension)
-        //_playerTexture = Content.Load<Texture2D>("yakuza");
-        /*Texture2DAtlas atlas = Content.Load<Texture2DAtlas>("SpriteSheet/yakuza-male");
-        SpriteSheet spriteSheet = new SpriteSheet("SpriteSheet/yakuza-male", atlas);
-        _testcharacter.LoadContent(spriteSheet);*/
-
-        // Position initiale
-        _playerPosition = new Vector2(100, 100);
+        
         // TODO: use this.Content to load your game content here
+        _testcharacter.LoadContent(Content);
     }
 
     protected override void Update(GameTime gameTime)
@@ -67,6 +58,7 @@ public class Game1 : Game
         if (keyboard.IsKeyDown(Keys.Down))
             _playerPosition.Y += 3;
         
+        _testcharacter.Update(gameTime);
         base.Update(gameTime);
     }
 
@@ -76,7 +68,7 @@ public class Game1 : Game
 
         // TODO: Add your drawing code here
         _spriteBatch.Begin();
-        //_spriteBatch.Draw(_playerTexture, _playerPosition, Color.White);
+        _testcharacter.Draw(_spriteBatch);
         _spriteBatch.End();
 
         base.Draw(gameTime);

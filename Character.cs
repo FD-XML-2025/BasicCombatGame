@@ -1,50 +1,66 @@
 using System;
 using Microsoft.Xna.Framework;
-using MonoGame.Extended;
-using MonoGame.Extended.Collisions;
+using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Graphics;
+using MonoGame.Extended.Animations;
 using MonoGame.Extended.Graphics;
 
 namespace BasicCombatGame;
 
-public class Character : ICollisionActor
+/*
+ * A character is an entity with an animated sprite.
+ */
+public class Character : Entity
 {
-    public Vector2 Velocity;
-    
+    private SpriteSheet _spriteSheet;
+    private AnimationController _animationController;
+    private string _spriteSheetAsset;
+    private string _animState;
+
     public Character()
     {
-        Bounds = new RectangleF();
-    }
-
-    public IShapeF Bounds { get; set; }
-
-    public String LayerName { get; set; }
-
-    public void OnCollision(CollisionEventArgs collisionInfo)
-    {
-        Velocity.X *= -1;
-        Velocity.Y *= -1;
-        Bounds.Position -= collisionInfo.PenetrationVector;
+        
     }
     
-    /*private AnimatedSprite _adventurer;
-
-    public void LoadContent(SpriteSheet spriteSheet)
+    public Character(string spriteSheetAsset, string spriteName)
     {
-        TimeSpan duration = TimeSpan.FromSeconds(0.1);
+        SpriteName        = spriteName;
+        _spriteSheetAsset = spriteSheetAsset;
+    }
+    
+    public void LoadContent(ContentManager contentManager)
+    {
+        base.LoadContent(contentManager);
         
-        spriteSheet.DefineAnimation("idle", builder =>
+        Texture2D adventurerTexture = contentManager.Load<Texture2D>(_spriteSheetAsset);
+        Texture2DAtlas atlas = Texture2DAtlas.Create("Atlas/"+SpriteName, adventurerTexture, 128, 128);
+        _spriteSheet = new SpriteSheet("SpriteSheet/"+SpriteName, atlas);
+
+        _spriteSheet.DefineAnimation("idle", builder =>
         {
             builder.IsLooping(true)
-                .AddFrame("yakuza-male-idle-01", duration)
-                .AddFrame("yakuza-male-idle-02", duration)
-                .AddFrame("yakuza-male-idle-03", duration)
-                .AddFrame("yakuza-male-idle-04", duration)
-                .AddFrame("yakuza-male-idle-05", duration)
-                .AddFrame("yakuza-male-idle-06", duration)
-                .AddFrame("yakuza-male-idle-07", duration)
-                .AddFrame("yakuza-male-idle-08", duration);
+                .AddFrame(0, TimeSpan.FromSeconds(0.1))
+                .AddFrame(1, TimeSpan.FromSeconds(0.1))
+                .AddFrame(2, TimeSpan.FromSeconds(0.1))
+                .AddFrame(3, TimeSpan.FromSeconds(0.1))
+                .AddFrame(4, TimeSpan.FromSeconds(0.1))
+                .AddFrame(5, TimeSpan.FromSeconds(0.1))
+                .AddFrame(6, TimeSpan.FromSeconds(0.1))
+                .AddFrame(7, TimeSpan.FromSeconds(0.1));
         });
 
-        _adventurer = new AnimatedSprite(spriteSheet, "idle");
-    }*/
+        SpriteSheetAnimation idleAnimation = _spriteSheet.GetAnimation("idle");
+        _animationController = new AnimationController(idleAnimation);
+    }
+
+    public void Update(GameTime gameTime)
+    {
+        _animationController.Update(gameTime);
+    }
+
+    public void Draw(SpriteBatch spriteBatch)
+    {
+        Texture2DRegion currentFrameTexture = _spriteSheet.TextureAtlas[_animationController.CurrentFrame];
+        spriteBatch.Draw(currentFrameTexture, Vector2.Zero, Color.White, 0.0f, Vector2.Zero, new Vector2(3, 3), SpriteEffects.None, 0.0f);
+    }
 }

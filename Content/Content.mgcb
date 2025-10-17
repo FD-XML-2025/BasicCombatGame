@@ -14,7 +14,7 @@
 
 #---------------------------------- Content ---------------------------------#
 
-#begin SpriteSheet/yakuza-male-idle.png
+#begin SpriteSheet/female-yakuza.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -24,8 +24,5 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:SpriteSheet/yakuza-male-idle.png
-
-#begin SpriteSheet/yakuza-male.xml
-/copy:SpriteSheet/yakuza-male.xml
+/build:SpriteSheet/female-yakuza.png
 
