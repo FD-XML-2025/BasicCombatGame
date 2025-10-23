@@ -37,7 +37,7 @@ public class Game1 : Game
 
         _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-       _monJeu.LoadContent(Content);
+        _monJeu.LoadContent(Content);
     }
 
     protected override void Update(GameTime gameTime)
