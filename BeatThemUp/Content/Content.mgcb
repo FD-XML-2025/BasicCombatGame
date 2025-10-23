@@ -141,6 +141,18 @@
 /processorParam:TextureFormat=Color
 /build:images/logo.png
 
+#begin images/RCG2_Selfie_01.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:images/RCG2_Selfie_01.png
+
 #begin images/tilemap-definition.xml
 /copy:images/tilemap-definition.xml
 
