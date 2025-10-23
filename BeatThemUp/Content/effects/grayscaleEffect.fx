@@ -36,9 +36,11 @@ float4 MainPS(VertexShaderOutput input) : COLOR
     // create a grayscale color vector (same value for R, G, and B)
     float3 grayscaleColor = float3(grayscale, grayscale, grayscale);
 
-    // Linear interpolation between he grayscale color and the original color's
-    // rgb values based on the saturation parameter.
-    float3 finalColor = lerp(grayscale, color.rgb, Saturation);
+    // Linear interpolation between the original color and the grayscale color
+    // based on the saturation parameter. We want 0 = full color, 1 = full
+    // grayscale (matches the comment above), so lerp between color.rgb and
+    // grayscaleColor using Saturation.
+    float3 finalColor = lerp(color.rgb, grayscaleColor, Saturation);
 
     // Return the final color with the original alpha value
     return float4(finalColor, color.a);

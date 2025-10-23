@@ -44,6 +44,15 @@ public class GameScene : Scene
 
     // The grayscale shader effect.
     private Effect _grayscaleEffect;
+    // The amount of saturation to provide the grayscale shader effect
+    
+    // Render target and fallback data used when the effect can't be loaded
+    // (e.g., on some Linux setups where the compiled effect isn't available).
+    private RenderTarget2D _sceneRenderTarget;
+    private Texture2D _fallbackTexture;
+    private Color[] _pixelBuffer;
+    private int _rtWidth;
+    private int _rtHeight;
 
     // The amount of saturation to provide the grayscale shader effect
     private float _saturation = 1.0f;
@@ -167,7 +176,24 @@ public class GameScene : Scene
         _collectSoundEffect = Content.Load<SoundEffect>("audio/collect");
 
         // Load the grayscale effect
-        _grayscaleEffect = Content.Load<Effect>("effects/grayscaleEffect");
+        try
+        {
+            _grayscaleEffect = Content.Load<Effect>("effects/grayscaleEffect");
+        }
+        catch
+        {
+            // Effect couldn't be loaded (common on Linux DesktopGL if the
+            // .xnb/.mgfx file isn't present). We'll fall back to a CPU-based
+            // grayscale rendering path at draw time.
+            _grayscaleEffect = null;
+        }
+
+        // Prepare a render target for the CPU fallback path. We'll match the
+        // backbuffer size to avoid scaling artifacts.
+        _rtWidth = Core.GraphicsDevice.PresentationParameters.BackBufferWidth;
+        _rtHeight = Core.GraphicsDevice.PresentationParameters.BackBufferHeight;
+        _sceneRenderTarget = new RenderTarget2D(Core.GraphicsDevice, _rtWidth, _rtHeight);
+        _pixelBuffer = new Color[_rtWidth * _rtHeight];
     }
 
     public override void Update(GameTime gameTime)
@@ -395,34 +421,83 @@ public class GameScene : Scene
     {
         // Clear the back buffer.
         Core.GraphicsDevice.Clear(Color.CornflowerBlue);
-
-        if (_state != GameState.Playing)
+        // If we have a working effect and we're in a non-playing state, use
+        // the GPU effect path.
+        if (_grayscaleEffect != null && _state != GameState.Playing)
         {
-            // We are in a game over state, so apply the saturation parameter.
             _grayscaleEffect.Parameters["Saturation"].SetValue(_saturation);
-
-            // And begin the sprite batch using the grayscale effect.
             Core.SpriteBatch.Begin(samplerState: SamplerState.PointClamp, effect: _grayscaleEffect);
+
+            // Draw scene normally through the sprite batch with the effect
+            _tilemap.Draw(Core.SpriteBatch);
+            _slime.Draw();
+            _bat.Draw();
+
+            Core.SpriteBatch.End();
+
+            // Draw the UI on top (UI isn't affected by the effect in the
+            // original design; keep that behavior).
+            _ui.Draw();
+        }
+        else if (_state != GameState.Playing)
+        {
+            // No effect available: use CPU fallback. Render the whole scene
+            // to a RenderTarget2D, fetch pixels, convert to grayscale based
+            // on _saturation, then draw the processed texture to the backbuffer.
+
+            // Set render target and draw the scene normally
+            Core.GraphicsDevice.SetRenderTarget(_sceneRenderTarget);
+            Core.GraphicsDevice.Clear(Color.CornflowerBlue);
+
+            Core.SpriteBatch.Begin(samplerState: SamplerState.PointClamp);
+            _tilemap.Draw(Core.SpriteBatch);
+            _slime.Draw();
+            _bat.Draw();
+            Core.SpriteBatch.End();
+
+            // Read the render target into a texture/pixel buffer
+            Core.GraphicsDevice.SetRenderTarget(null);
+            _sceneRenderTarget.GetData(_pixelBuffer);
+
+            // Apply grayscale conversion with saturation parameter.
+            // saturation: 0 = full color, 1 = full grayscale
+            for (int i = 0; i < _pixelBuffer.Length; i++)
+            {
+                Color c = _pixelBuffer[i];
+                float grayscale = c.R * 0.3f / 255f + c.G * 0.59f / 255f + c.B * 0.11f / 255f;
+                // lerp original color towards grayscale
+                float invSat = 1f - _saturation;
+                byte r = (byte)MathHelper.Clamp((c.R / 255f * invSat + grayscale * _saturation) * 255f, 0f, 255f);
+                byte g = (byte)MathHelper.Clamp((c.G / 255f * invSat + grayscale * _saturation) * 255f, 0f, 255f);
+                byte b = (byte)MathHelper.Clamp((c.B / 255f * invSat + grayscale * _saturation) * 255f, 0f, 255f);
+                _pixelBuffer[i] = new Color(r, g, b, c.A);
+            }
+
+            // Upload processed pixels into a temporary dynamic texture and draw
+            if (_fallbackTexture == null || _fallbackTexture.Width != _rtWidth || _fallbackTexture.Height != _rtHeight)
+            {
+                _fallbackTexture?.Dispose();
+                _fallbackTexture = new Texture2D(Core.GraphicsDevice, _rtWidth, _rtHeight);
+            }
+            _fallbackTexture.SetData(_pixelBuffer);
+
+            Core.SpriteBatch.Begin(samplerState: SamplerState.PointClamp);
+            Core.SpriteBatch.Draw(_fallbackTexture, Vector2.Zero, Color.White);
+            Core.SpriteBatch.End();
+
+            // Draw UI on top
+            _ui.Draw();
         }
         else
         {
-            // Otherwise, just begin the sprite batch as normal.
+            // Playing state and no effect -> normal draw
             Core.SpriteBatch.Begin(samplerState: SamplerState.PointClamp);
+            _tilemap.Draw(Core.SpriteBatch);
+            _slime.Draw();
+            _bat.Draw();
+            Core.SpriteBatch.End();
+
+            _ui.Draw();
         }
-
-        // Draw the tilemap
-        _tilemap.Draw(Core.SpriteBatch);
-
-        // Draw the slime.
-        _slime.Draw();
-
-        // Draw the bat.
-        _bat.Draw();
-
-        // Always end the sprite batch when finished.
-        Core.SpriteBatch.End();
-
-        // Draw the UI
-        _ui.Draw();
     }
 }
