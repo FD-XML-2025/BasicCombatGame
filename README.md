@@ -75,3 +75,10 @@ git branch -d feature-my-awesome-feature
 ```
 git push origin --delete feature-my-awesome-feature
 ```
+
+# MGCB Editor
+```
+dotnet tool install -g dotnet-mgcb
+```
+dotnet mgcb-editor
+```
