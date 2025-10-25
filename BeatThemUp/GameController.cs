@@ -13,49 +13,27 @@ public static class GameController
 {
     private static KeyboardInfo s_keyboard => Core.Input.Keyboard;
     private static GamePadInfo s_gamePad => Core.Input.GamePads[(int)PlayerIndex.One];
-
+    
     /// <summary>
-    /// Returns true if the player has triggered the "move up" action.
+    /// Returns true if the player has triggered the "move backward" action.
     /// </summary>
-    public static bool MoveUp()
+    public static bool MoveBackward()
     {
-        return s_keyboard.WasKeyJustPressed(Keys.Up) ||
-               s_keyboard.WasKeyJustPressed(Keys.W) ||
-               s_gamePad.WasButtonJustPressed(Buttons.DPadUp) ||
-               s_gamePad.WasButtonJustPressed(Buttons.LeftThumbstickUp);
+        return s_keyboard.IsKeyDown(Keys.Left) ||
+               s_keyboard.IsKeyDown(Keys.Q) ||
+               s_gamePad.IsButtonDown(Buttons.DPadLeft) ||
+               s_gamePad.IsButtonDown(Buttons.LeftThumbstickLeft);
     }
 
     /// <summary>
-    /// Returns true if the player has triggered the "move down" action.
+    /// Returns true if the player has triggered the "move forward" action.
     /// </summary>
-    public static bool MoveDown()
+    public static bool MoveForward()
     {
-        return s_keyboard.WasKeyJustPressed(Keys.Down) ||
-               s_keyboard.WasKeyJustPressed(Keys.S) ||
-               s_gamePad.WasButtonJustPressed(Buttons.DPadDown) ||
-               s_gamePad.WasButtonJustPressed(Buttons.LeftThumbstickDown);
-    }
-
-    /// <summary>
-    /// Returns true if the player has triggered the "move left" action.
-    /// </summary>
-    public static bool MoveLeft()
-    {
-        return s_keyboard.WasKeyJustPressed(Keys.Left) ||
-               s_keyboard.WasKeyJustPressed(Keys.A) ||
-               s_gamePad.WasButtonJustPressed(Buttons.DPadLeft) ||
-               s_gamePad.WasButtonJustPressed(Buttons.LeftThumbstickLeft);
-    }
-
-    /// <summary>
-    /// Returns true if the player has triggered the "move right" action.
-    /// </summary>
-    public static bool MoveRight()
-    {
-        return s_keyboard.WasKeyJustPressed(Keys.Right) ||
-               s_keyboard.WasKeyJustPressed(Keys.D) ||
-               s_gamePad.WasButtonJustPressed(Buttons.DPadRight) ||
-               s_gamePad.WasButtonJustPressed(Buttons.LeftThumbstickRight);
+        return s_keyboard.IsKeyDown(Keys.Right) ||
+               s_keyboard.IsKeyDown(Keys.D) ||
+               s_gamePad.IsButtonDown(Buttons.DPadRight) ||
+               s_gamePad.IsButtonDown(Buttons.LeftThumbstickRight);
     }
 
     /// <summary>

@@ -11,7 +11,7 @@ public class Game1 : Core
     // The background theme song
     private Song _themeSong;
 
-    public Game1() : base("Beat Them Up!", 1280, 720, true)
+    public Game1() : base("Beat Them Up!", 1280, 720, false)
     {
 
     }

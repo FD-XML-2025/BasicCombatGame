@@ -102,6 +102,9 @@
 /processorParam:TextureFormat=Compressed
 /build:fonts/04B_30.spritefont
 
+#begin images/atlas-definition-characters.xml
+/copy:images/atlas-definition-characters.xml
+
 #begin images/atlas-definition.xml
 /copy:images/atlas-definition.xml
 
@@ -152,6 +155,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:images/RCG2_Selfie_01.png
+
+#begin images/spritesheet.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:images/spritesheet.png
 
 #begin images/tilemap-definition.xml
 /copy:images/tilemap-definition.xml
