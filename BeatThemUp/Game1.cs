@@ -121,15 +121,13 @@ public class Game1 : Core
 
     protected override void Draw(GameTime gameTime)
     {
-        GraphicsDevice.Clear(Color.Black);
-        spriteBatch.Begin();
+        base.Draw(gameTime);
+        spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
 
         player.Draw(spriteBatch);
-        
         tiger.Draw(spriteBatch);
 
         spriteBatch.End();
-
-        base.Draw(gameTime);
+    
     }
 }

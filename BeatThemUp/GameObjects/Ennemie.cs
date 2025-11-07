@@ -160,7 +160,7 @@ public class Ennemie
     {
         if (!IsDead || currentState == "defeated") // enemy doesn't actually disappear
         {
-            spriteBatch.Draw(currentTexture, position, Color.White);
+            spriteBatch.Draw(currentTexture, position, Color.Red * 0.8f);
         }
     }
 
