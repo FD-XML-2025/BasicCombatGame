@@ -1,4 +1,4 @@
-# Usefull tools
+# Useful tools
 - [Sprite Sheet Generator](https://codeshack.io/images-sprite-sheet-generator/)
 - 
 
