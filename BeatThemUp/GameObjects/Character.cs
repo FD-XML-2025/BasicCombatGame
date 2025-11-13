@@ -10,6 +10,76 @@ public class Character : Actor
     // The AnimatedSprite used when drawing each slime segment
     private AnimatedSprite _sprite;
 
+    private float _health;
+    
+    private float _maxHealth;
+
+    private Weapon _weapon;
+
+    private bool _isParrying;
+
+    public Weapon Weapon
+    {
+        get => _weapon;
+        set => _weapon = value;
+    }
+    
+    public bool HasWeapon()
+    {
+        return Weapon != null;
+    }
+
+    public float Health
+    {
+        get => _health;
+        set
+        {
+            _health = float.Clamp(value, 0, MaxHealth);
+            if (_health <= 0)
+                OnDeath();
+        }
+    }
+    
+    public float MaxHealth
+    {
+        get => _maxHealth;
+        set
+        {
+            if (value <= 0)
+                throw new ArgumentException("MaxHealth must be greater than 0");
+            _maxHealth = value;
+        }
+    }
+
+    // Heal character with x amount of points
+    public void Heal(float amount)
+    {
+        Health += amount;
+    }
+
+    // Kill the character, means set health to 0
+    public void Kill()
+    {
+        Health = 0;
+    }
+
+    // Character t
+    public void TakeDamage(float amount)
+    {
+        Health -= amount;
+    }
+
+    protected void OnDeath()
+    {
+        
+    }
+
+    public bool IsParrying
+    {
+        get => _isParrying;
+        set => _isParrying = value;
+    }
+
     /// <summary>
     /// Event that is raised if it is detected that the head segment of the slime
     /// has collided with a body segment.
