@@ -115,21 +115,20 @@ public class Game1 : Core
         player.Update();
         tiger.Update(gameTime, player);
         base.Update(gameTime);
+        
         Console.WriteLine($"Tiger position: {tiger.Position}, Alive: {tiger.IsAlive}");
 
     }
 
     protected override void Draw(GameTime gameTime)
     {
-        GraphicsDevice.Clear(Color.Black);
-        spriteBatch.Begin();
+        base.Draw(gameTime);
+        spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
 
         player.Draw(spriteBatch);
-        
         tiger.Draw(spriteBatch);
 
         spriteBatch.End();
-
-        base.Draw(gameTime);
+    
     }
 }

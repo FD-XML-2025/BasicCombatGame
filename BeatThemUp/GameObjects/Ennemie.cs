@@ -166,13 +166,13 @@ public class Ennemie
 
     public void Attack(Joueur player)
     {
-        player.TakeDamage(10); // adjust damage
+        player.TakeDamage(10); // need to adjust damage separate for kicks and hits
     }
 
     public void TakeDamage(double damage)
     {
         hp -= damage;
-        if (hp > 0 && currentState != "hit") // Only change to hit state if not already dead
+        if (hp > 0 && currentState != "hit") // Only change to hit state if not already dead just in case
         {
             currentState = "hit";
             stateTimer = 0f;
