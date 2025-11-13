@@ -11,6 +11,10 @@ public class Joueur
     private double hp { get; set; }
     private double dmg { get; set; }
 
+    public Vector2 Position
+    {
+        get { return _playerPosition; }
+    }
     public Joueur(double hp, double dmg)
     {
         this.hp = hp;
@@ -51,8 +55,9 @@ public class Joueur
         
     }
 
-    public void TakeDamage()
+    public void TakeDamage(double damage)
     {
-        
+        hp -= damage;
+        if (hp < 0) hp = 0;
     }
 }
