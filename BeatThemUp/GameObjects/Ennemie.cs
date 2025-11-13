@@ -160,13 +160,13 @@ public class Ennemie
     {
         if (!IsDead || currentState == "defeated") // enemy doesn't actually disappear
         {
-            spriteBatch.Draw(currentTexture, position, Color.Red * 0.8f);
+            spriteBatch.Draw(currentTexture, position, Color.White);
         }
     }
 
     public void Attack(Joueur player)
     {
-        player.TakeDamage(10); // adjust damage
+        player.TakeDamage(10); // need to adjust damage separate for kicks and hits
     }
 
     public void TakeDamage(double damage)
