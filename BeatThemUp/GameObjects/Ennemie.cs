@@ -172,7 +172,7 @@ public class Ennemie
     public void TakeDamage(double damage)
     {
         hp -= damage;
-        if (hp > 0 && currentState != "hit") // Only change to hit state if not already dead
+        if (hp > 0 && currentState != "hit") // Only change to hit state if not already dead just in case
         {
             currentState = "hit";
             stateTimer = 0f;
