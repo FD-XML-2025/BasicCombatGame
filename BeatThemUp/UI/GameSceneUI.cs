@@ -4,11 +4,13 @@ using Gum.Managers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Graphics;
 using MonoGameGum;
 using MonoGameGum.Forms.Controls;
 using MonoGameGum.GueDeriving;
 using MonoGameLibrary;
 using MonoGameLibrary.Graphics;
+using RenderingLibrary.Graphics;
 
 namespace BeatThemUp.UI;
 
@@ -36,6 +38,9 @@ public class GameSceneUI : ContainerRuntime
 
     // The text runtime used to display the players score on the game screen.
     private TextRuntime _scoreText;
+    
+    // The text runtime used to display the timer on the game screen.
+    private TextRuntime _timerText;
 
     /// <summary>
     /// Event invoked when the Resume button on the Pause panel is clicked.
@@ -76,6 +81,9 @@ public class GameSceneUI : ContainerRuntime
         _scoreText = CreateScoreText();
         AddChild(_scoreText);
 
+        _timerText = CreateTimerText();
+        AddChild(_timerText);
+
         // Create the Pause panel that is displayed when the game is paused and
         // add it as a child to this container
         _pausePanel = CreatePausePanel(atlas);
@@ -98,6 +106,22 @@ public class GameSceneUI : ContainerRuntime
         text.CustomFontFile = @"fonts/04b_30.fnt";
         text.FontScale = 0.25f;
         text.Text = string.Format(s_scoreFormat, 0);
+
+        return text;
+    }
+    
+    private TextRuntime CreateTimerText()
+    {
+        TextRuntime text = new TextRuntime();
+        text.Anchor(Gum.Wireframe.Anchor.Top);
+        text.WidthUnits = DimensionUnitType.RelativeToChildren;
+        text.HorizontalAlignment = HorizontalAlignment.Center;
+        text.X = 20.0f;
+        text.Y = 5.0f;
+        text.UseCustomFont = true;
+        text.CustomFontFile = "fonts/04b_30.fnt";
+        text.FontScale = 0.25f;
+        text.Text = GetFormatedRemainingTime(0);
 
         return text;
     }
@@ -275,6 +299,17 @@ public class GameSceneUI : ContainerRuntime
     public void UpdateScoreText(int score)
     {
         _scoreText.Text = string.Format(s_scoreFormat, score);
+    }
+
+    public void UpdateTimerText(int remainingTime)
+    {
+        
+        _timerText.Text = GetFormatedRemainingTime(remainingTime);
+    }
+
+    public String GetFormatedRemainingTime(int remainingTime)
+    {
+        return TimeSpan.FromSeconds(remainingTime).ToString(@"mm\:ss");
     }
 
     /// <summary>

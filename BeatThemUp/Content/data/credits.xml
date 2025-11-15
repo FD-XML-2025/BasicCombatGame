@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<XnaContent>
+  <Asset Type="BeatThemUp.CreditData[]">
+      <Item>
+          <Name>Valentin Chêné</Name>
+      </Item>
+      <Item>
+          <Name>Minh Huy Nguyen</Name>
+      </Item>
+      <Item>
+          <Name>Nguyen Phuoc Loc Luu</Name>
+      </Item>
+      <Item>
+          <Name>Adam Nedic</Name>
+      </Item>
+  </Asset>
+</XnaContent>

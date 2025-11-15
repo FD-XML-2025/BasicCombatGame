@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<XnaContent>
+  <Asset Type="BeatThemUp.CreditData[]">
+      <Item>
+          <Coins>0</Coins>
+      </Item>
+  </Asset>
+</XnaContent>

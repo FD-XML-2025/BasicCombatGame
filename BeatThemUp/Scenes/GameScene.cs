@@ -20,8 +20,13 @@ public class GameScene : Scene
         GameOver
     }
 
+    // Game timer
+    private Timer _timer;
+
     // Reference to the player.
     private Player _player;
+    
+    private Ennemie tiger;
 
     // The sound effect to play when the player ...
     private SoundEffect _collectSoundEffect;
@@ -41,6 +46,9 @@ public class GameScene : Scene
 
     // The speed of the fade to grayscale effect.
     private const float FADE_SPEED = 0.02f;
+
+    // The level duration in seconds
+    private const float LEVEL_DURATION = 5 * 60f;
 
     public override void Initialize()
     {
@@ -112,6 +120,35 @@ public class GameScene : Scene
 
         // Set the game state to playing
         _state = GameState.Playing;
+        
+        // Init and start timer
+        _timer = new Timer(LEVEL_DURATION);
+        _timer.Start();
+        
+        Texture2D tigerWalk = Content.Load<Texture2D>("images/Tiger_Enemy/RCG_Walk_09");
+        Texture2D tigerHit = Content.Load<Texture2D>("images/Tiger_Enemy/RCG_Idle_10");
+        Texture2D tigerAboutToHit = Content.Load<Texture2D>("images/Tiger_Enemy/RCG_Attack_Chop_03");
+        Texture2D tigerHitting = Content.Load<Texture2D>("images/Tiger_Enemy/RCG_Attack_Chop_04");
+        Texture2D tigerAboutToKick = Content.Load<Texture2D>("images/Tiger_Enemy/RCG_Attack_Boot_05");
+        Texture2D tigerKicking = Content.Load<Texture2D>("images/Tiger_Enemy/RCG_Attack_Boot_06");
+        Texture2D tigerDefeated = Content.Load<Texture2D>("images/Tiger_Enemy/RCG_Idle_10");
+        
+        if (tigerWalk == null) throw new Exception("tigerWalk texture failed to load");
+        if (tigerHit == null) throw new Exception("tigerHit texture failed to load");
+        if (tigerAboutToHit == null) throw new Exception("tigerAboutToHit texture failed to load");
+        if (tigerHitting == null) throw new Exception("tigerHitting texture failed to load");
+        if (tigerAboutToKick == null) throw new Exception("tigerAboutToKick texture failed to load");
+        if (tigerKicking == null) throw new Exception("tigerKicking texture failed to load");
+        if (tigerDefeated == null) throw new Exception("tigerDefeated texture failed to load");
+        
+        /*tiger = new Ennemie(
+            100,
+            "Tiger",
+            tigerWalk, tigerHit, tigerAboutToHit, tigerHitting,
+            tigerAboutToKick, tigerKicking, tigerDefeated,
+            new Vector2(300, 300),
+            _player
+        );*/
     }
 
     public override void LoadContent()
@@ -169,6 +206,17 @@ public class GameScene : Scene
 
         // Update the player;
         _player.Update(gameTime);
+        
+        //tiger.Update(gameTime);
+        
+        // Update the timer
+        _timer.Update(gameTime);
+        _ui.UpdateTimerText((int)_timer.GetRemainingTime());
+
+        if (_timer.IsFinished())
+        {
+            GameOver();
+        }
 
         // Perform collision checks
         CollisionChecks();
@@ -193,11 +241,6 @@ public class GameScene : Scene
         }*/
     }
 
-    private void OnPlayerBodyCollision(object sender, EventArgs args)
-    {
-        GameOver();
-    }
-
     private void TogglePause()
     {
         if (_state == GameState.Paused)
@@ -207,9 +250,15 @@ public class GameScene : Scene
 
             // And set the state back to playing
             _state = GameState.Playing;
+            
+            // Unpause timer
+            _timer.Start();
         }
         else
         {
+            // Pause the timer
+            _timer.Stop();
+            
             // We're now pausing the game, so show the pause panel
             _ui.ShowPausePanel();
 
@@ -254,6 +303,8 @@ public class GameScene : Scene
 
         // Draw the player.
         _player.Draw();
+        
+        //tiger.Draw(spriteBatch);
 
         // Always end the sprite batch when finished.
         Core.SpriteBatch.End();
