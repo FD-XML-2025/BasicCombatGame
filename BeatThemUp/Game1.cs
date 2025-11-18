@@ -85,10 +85,10 @@ public class Game1 : Core
 
     protected override void Draw(GameTime gameTime)
     {
+        
+        
         base.Draw(gameTime);
-        spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
-
-        spriteBatch.End();
-    
+        
+        GumService.Default.Draw();
     }
 }

@@ -1,0 +1,75 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TextureAtlas>
+    <Texture>images/spritesheet(1)</Texture>
+    <Regions>
+        <!-- WALK (4 frames) -->
+        <Region name="tiger_walk_1" x="0"   y="0"   width="128" height="128"/>
+        <Region name="tiger_walk_2" x="128" y="0"   width="128" height="128"/>
+        <Region name="tiger_walk_3" x="256" y="0"   width="128" height="128"/>
+        <Region name="tiger_walk_4" x="384" y="0"   width="128" height="128"/>
+
+        <!-- HIT (4 frames) -->
+        <Region name="tiger_hit_1" x="0"   y="128" width="128" height="128"/>
+        <Region name="tiger_hit_2" x="128" y="128" width="128" height="128"/>
+        <Region name="tiger_hit_3" x="256" y="128" width="128" height="128"/>
+        <Region name="tiger_hit_4" x="384" y="128" width="128" height="128"/>
+
+        <!-- PUNCH (8 frames) -->
+        <Region name="tiger_punch_1" x="0"   y="256" width="128" height="128"/>
+        <Region name="tiger_punch_2" x="128" y="256" width="128" height="128"/>
+        <Region name="tiger_punch_3" x="256" y="256" width="128" height="128"/>
+        <Region name="tiger_punch_4" x="384" y="256" width="128" height="128"/>
+        <Region name="tiger_punch_5" x="0"   y="384" width="128" height="128"/>
+        <Region name="tiger_punch_6" x="128" y="384" width="128" height="128"/>
+        <Region name="tiger_punch_7" x="256" y="384" width="128" height="128"/>
+        <Region name="tiger_punch_8" x="384" y="384" width="128" height="128"/>
+
+        <!-- KICK (8 frames) -->
+        <Region name="tiger_kick_1" x="0"   y="512" width="128" height="128"/>
+        <Region name="tiger_kick_2" x="128" y="512" width="128" height="128"/>
+        <Region name="tiger_kick_3" x="256" y="512" width="128" height="128"/>
+        <Region name="tiger_kick_4" x="384" y="512" width="128" height="128"/>
+        <Region name="tiger_kick_5" x="0"   y="640" width="128" height="128"/>
+        <Region name="tiger_kick_6" x="128" y="640" width="128" height="128"/>
+        <Region name="tiger_kick_7" x="256" y="640" width="128" height="128"/>
+        <Region name="tiger_kick_8" x="384" y="640" width="128" height="128"/>
+    </Regions>
+
+    <Animations>
+        <Animation name="tiger_walk" delay="120">
+            <Frame region="tiger_walk_1"/>
+            <Frame region="tiger_walk_2"/>
+            <Frame region="tiger_walk_3"/>
+            <Frame region="tiger_walk_4"/>
+        </Animation>
+
+        <Animation name="tiger_hit" delay="100">
+            <Frame region="tiger_hit_1"/>
+            <Frame region="tiger_hit_2"/>
+            <Frame region="tiger_hit_3"/>
+            <Frame region="tiger_hit_4"/>
+        </Animation>
+
+        <Animation name="tiger_punch" delay="80">
+            <Frame region="tiger_punch_1"/>
+            <Frame region="tiger_punch_2"/>
+            <Frame region="tiger_punch_3"/>
+            <Frame region="tiger_punch_4"/>
+            <Frame region="tiger_punch_5"/>
+            <Frame region="tiger_punch_6"/>
+            <Frame region="tiger_punch_7"/>
+            <Frame region="tiger_punch_8"/>
+        </Animation>
+
+        <Animation name="tiger_kick" delay="80">
+            <Frame region="tiger_kick_1"/>
+            <Frame region="tiger_kick_2"/>
+            <Frame region="tiger_kick_3"/>
+            <Frame region="tiger_kick_4"/>
+            <Frame region="tiger_kick_5"/>
+            <Frame region="tiger_kick_6"/>
+            <Frame region="tiger_kick_7"/>
+            <Frame region="tiger_kick_8"/>
+        </Animation>
+    </Animations>
+</TextureAtlas>
