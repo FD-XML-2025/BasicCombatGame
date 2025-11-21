@@ -1,5 +1,5 @@
-using System;
 using BeatThemUp.UI;
+using GameDataTypes;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
@@ -10,7 +10,12 @@ using MonoGameGum.GueDeriving;
 using MonoGameLibrary;
 using MonoGameLibrary.Graphics;
 using MonoGameLibrary.Scenes;
+using System;
 using System.Diagnostics;
+using System.IO;
+using System.Xml.Serialization;
+using ToolsUtilities;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace BeatThemUp.Scenes;
 
@@ -76,6 +81,10 @@ public class TitleScene : Scene
     // are created.
     private TextureAtlas _atlas;
 
+    private CreditData[] _credits;
+
+    private SettingsData[] _settings;
+
     public override void Initialize()
     {
         // LoadContent is called during base.Initialize().
@@ -126,6 +135,9 @@ public class TitleScene : Scene
 
         // Load the texture atlas from the xml configuration file.
         _atlas = TextureAtlas.FromFile(Core.Content, "images/atlas-definition.xml");
+
+        // Load the credits from the XML path
+        _credits = Content.Load<CreditData[]>("data/credits");
     }
 
     private void CreateTitlePanel()
@@ -211,7 +223,7 @@ public class TitleScene : Scene
 
     private void HandleQuitClicked(object sender, EventArgs e)
     {
-
+    
     }
 
     private void CreateOptionsPanel()
@@ -283,15 +295,20 @@ public class TitleScene : Scene
         optionsText.CustomFontFile = @"fonts/04b_30.fnt";
         _creditsPanel.AddChild(optionsText);
 
-        for (int i = 0; i < 4; i++)
+        if (_credits != null)
         {
-            AnimatedButton nameButton = new AnimatedButton(_atlas);
-            nameButton.Text = "Valentin Chene";
-            nameButton.Anchor(Gum.Wireframe.Anchor.Center);
-            nameButton.X = 0f;
-            nameButton.Y = i * 20f;
-            nameButton.Click += HandleNameButtonClick;
-            _creditsPanel.AddChild(nameButton);   
+            for (int i = 0; i < _credits.Length; i++)
+            {
+                var credit = _credits[i];
+
+                AnimatedButton nameButton = new AnimatedButton(_atlas);
+                nameButton.Text = credit.Name;
+                nameButton.Anchor(Gum.Wireframe.Anchor.Center);
+                nameButton.X = 0f;
+                nameButton.Y = i * 20f - 25f;
+                nameButton.Click += (s, e) => HandleCreditNameButtonClick(credit.Link);
+                _creditsPanel.AddChild(nameButton);
+            }
         }
 
         _creditsBackButton = new AnimatedButton(_atlas);
@@ -355,6 +372,25 @@ public class TitleScene : Scene
         // Give the options button on the title panel focus since we are coming
         // back from the options screen.
         _optionsButton.IsFocused = true;
+
+        SaveSettings();
+    }
+
+    private void SaveSettings()
+    {
+        // Save settings from the current Runtime settings
+        var settings = new SettingsData()
+        {
+            MusicVolume = Core.Audio.SongVolume,
+            MasterVolume = Core.Audio.SoundEffectVolume
+        };
+
+        // Save those settings to XML (settings.xml)
+        XmlSerializer serializer = new XmlSerializer(typeof(SettingsData));
+        using (StreamWriter writer = new StreamWriter("settings.xml"))
+        {
+            serializer.Serialize(writer, settings);
+        }
     }
 
     private void HandleCreditsButtonBack(object sender, EventArgs e)
@@ -373,13 +409,16 @@ public class TitleScene : Scene
         _creditsButton.IsFocused = true;
     }
 
-    private void HandleNameButtonClick(object sender, EventArgs e)
+    private void HandleCreditNameButtonClick(string url)
     {
-        Process.Start(new ProcessStartInfo
+        if (!string.IsNullOrEmpty(url))
         {
-            FileName = "https://github.com/Sarbatore",
-            UseShellExecute = true // Needed to open the browser
-        });
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = url,
+                UseShellExecute = true // Needed to open the browser
+            });
+        }
     }
 
     private void InitializeUI()
