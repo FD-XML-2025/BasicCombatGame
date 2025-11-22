@@ -1,9 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<XnaContent>
-  <Asset Type="BeatThemUp.SettingsData[]">
-      <Item>
-          <MasterVolume>1.0</MasterVolume>
-          <MusicVolume>1.0</MusicVolume>
-      </Item>
+<XnaContent xmlns:GameDataTypes="GameDataTypes">
+  <Asset Type="GameDataTypes:SettingsData">
+	  <MasterVolume>1.0</MasterVolume>
+	  <MusicVolume>1.0</MusicVolume>
   </Asset>
 </XnaContent>

@@ -10,6 +10,7 @@
 
 #-------------------------------- References --------------------------------#
 
+/reference:..\..\GameDataTypes\bin\Debug\net8.0\GameDataTypes.dll
 
 #---------------------------------- Content ---------------------------------#
 
@@ -78,6 +79,21 @@
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
 /build:audio/victory.wav
+
+#begin data/credits.xml
+/importer:XmlImporter
+/processor:PassThroughProcessor
+/build:data/credits.xml
+
+#begin data/save.xml
+/importer:XmlImporter
+/processor:PassThroughProcessor
+/build:data/save.xml
+
+#begin data/settings.xml
+/importer:XmlImporter
+/processor:PassThroughProcessor
+/build:data/settings.xml
 
 #begin effects/grayscaleEffect.fx
 /importer:EffectImporter

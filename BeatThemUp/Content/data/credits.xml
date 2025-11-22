@@ -1,17 +1,21 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <XnaContent>
-  <Asset Type="BeatThemUp.CreditData[]">
+  <Asset Type="GameDataTypes.CreditData[]">
       <Item>
-          <Name>Valentin Chêné</Name>
+          <Name>Valentin Chene</Name>
+		  <Link>https://github.com/Sarbatore</Link>
       </Item>
+	  <Item>
+		  <Name>Adam Nedic</Name>
+		  <Link>https://github.com/Anedi1</Link>
+	  </Item>
       <Item>
           <Name>Minh Huy Nguyen</Name>
+		  <Link>https://github.com/minhhuy20916</Link>
       </Item>
       <Item>
           <Name>Nguyen Phuoc Loc Luu</Name>
-      </Item>
-      <Item>
-          <Name>Adam Nedic</Name>
+		  <Link>https://github.com/luunpl</Link>
       </Item>
   </Asset>
 </XnaContent>
