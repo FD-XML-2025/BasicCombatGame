@@ -110,7 +110,7 @@ public class GameScene : Scene
     private void InitializeNewGame()
     {
         // Calculate the position for the player
-        Vector2 playerPos = Vector2.Zero;
+        Vector2 playerPos = new Vector2(0, 500);
 
         // Initialize the player
         _player.Initialize(playerPos);
@@ -131,16 +131,20 @@ public class GameScene : Scene
         
         // Tiger animations
         AnimatedSprite tigerWalk  = tigerAtlas.CreateAnimatedSprite("tiger_walk");
-        AnimatedSprite tigerHit   = tigerAtlas.CreateAnimatedSprite("tiger_hit");  
         AnimatedSprite tigerPunch = tigerAtlas.CreateAnimatedSprite("tiger_punch");
         AnimatedSprite tigerKick  = tigerAtlas.CreateAnimatedSprite("tiger_kick");
-        AnimatedSprite tigerDefeated = tigerAtlas.CreateAnimatedSprite("tiger_hit"); // reuse hit
+        AnimatedSprite tigerDefeated = tigerAtlas.CreateAnimatedSprite("tiger_defeated"); // reuse hit
         
         tiger = new Ennemie(
             100f, "Tiger",
-            tigerWalk, tigerHit, tigerPunch, tigerKick,
-            tigerPunch, tigerKick, tigerDefeated,  // punch/kick for about_to_*
-            new Vector2(600, 300), _player
+            tigerWalk,           // walk
+            tigerPunch,          // aboutToPunch
+            tigerPunch,          //  punch
+            tigerKick,           // aboutToKick 
+            tigerKick,           // kicking  
+            tigerDefeated,       // defeated
+            new Vector2(600, 620),
+            _player
         );
     }
 
