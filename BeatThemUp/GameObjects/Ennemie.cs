@@ -116,7 +116,7 @@ public class Ennemie
         // stopping distance based on direction
         if (currentState == "walk")
         {
-            float stopDistance = facingLeft ? 210f : 150f;   // ← Tiger on right = farther stop
+            float stopDistance = facingLeft ? 210f : 150f;   // Tiger on right = further stop because image isn't symmetric
 
             if (facingLeft)
             {
