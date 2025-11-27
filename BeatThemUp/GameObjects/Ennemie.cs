@@ -7,6 +7,8 @@ namespace BeatThemUp.GameObjects;
 
 public class Ennemie
 {
+    private float attackStartX;   //  tiger pos when attack started
+    private float playerStartX;   // player pos when attack started
     private AnimatedSprite _walkSprite, _aboutToHitSprite, _hittingSprite;
     private AnimatedSprite _aboutToKickSprite, _kickingSprite, _defeatedSprite;
     private AnimatedSprite _currentSprite;
@@ -16,11 +18,11 @@ public class Ennemie
     private float speed;
     private double hp;
     private string type;
-    private string currentState; // Tracks the current animation state
-    private float stateTimer; // Timer to switch states
-    private const float StateDuration = 0.5f; // Duration 0.5secs
-    private readonly Vector2 origin = new Vector2(64, 128); // Bottom-center (feet!)
-    private bool facingLeft = true; // Tiger starts looking left toward player
+    private string currentState; // animation state
+    private float stateTimer;
+    private const float StateDuration = 0.5f;
+    private readonly Vector2 origin = new Vector2(64, 128); // Bottom-center
+    private bool facingLeft = true;
     public bool IsDead
     {
         get { return hp <= 0; }
@@ -49,10 +51,10 @@ public class Ennemie
         _kickingSprite = kicking;
         _defeatedSprite = defeated;
         this.position = position;
-        this._player = player ?? throw new ArgumentNullException(nameof(player));
-        this.speed = 0.8f;
+        this._player = player;
+        this.speed = 100f;
         this.velocity = Vector2.Zero;
-        this.currentState = "walk"; // Resting
+        this.currentState = "walk";
         this.stateTimer = 0f;
         UpdateCurrentSprite();
     }
@@ -62,7 +64,7 @@ public class Ennemie
         _currentSprite = currentState switch
         {
             "walk"           => _walkSprite,
-            "hit"            => _aboutToHitSprite,     // reuse "about to punch" as flinch/hit
+            "hit"            => _aboutToHitSprite,
             "about_to_hit"   => _aboutToHitSprite,
             "hitting"        => _hittingSprite,
             "about_to_kick"  => _aboutToKickSprite,
@@ -74,90 +76,79 @@ public class Ennemie
 
     public void Update(GameTime gameTime)
     {
-        stateTimer += (float)gameTime.ElapsedGameTime.TotalSeconds;
-        facingLeft = _player.Position.X < position.X;
-        // Only check for state changes every StateDuration
-        if (stateTimer >= StateDuration)
+        float delta = (float)gameTime.ElapsedGameTime.TotalSeconds;
+        stateTimer += delta;
+
+        if (hp <= 0)
         {
-            stateTimer = 0f;
-
-            float distance = Vector2.Distance(position, _player.Position);
-
-            if (IsDead)
-            {
-                currentState = "defeated";
-            }
-            else if (distance < 50) // player is near, start attack sequence
-            {
-                switch (currentState)
-                {
-                    case "walk":
-                        currentState = (Random.Shared.Next(2) == 0) ? "about_to_hit" : "about_to_kick";
-                        break;
-                    case "about_to_hit":
-                        currentState = "hitting";
-                        Attack();
-                        break;
-                    case "about_to_kick":
-                        currentState = "kicking";
-                        Attack();
-                        break;
-                    case "hitting":
-                    case "kicking":
-                        currentState = "walk"; // back to walk after attack
-                        break;
-                }
-            }
-            else
-            {
-                currentState = "walk"; // player is far
-            }
-
+            currentState = "defeated";
             UpdateCurrentSprite();
+            _currentSprite.Update(gameTime);
+            return;
         }
 
-        // Move toward player only if walking
+        float playerX = _player.Position.X;
+        float tigerX  = position.X;
+
+        if (currentState == "walk" || currentState == "hit")
+            facingLeft = playerX < tigerX;
+
+        // Start attack when close enough
         if (currentState == "walk")
         {
-            Vector2 direction = _player.Position - position;
-            if (direction.LengthSquared() > 0)
+            bool inFront = facingLeft ? (playerX < tigerX) : (playerX > tigerX);
+            if (inFront && Math.Abs(playerX - tigerX) < 220f)
             {
-                direction.Normalize();
-                velocity = direction * speed;
+                if (stateTimer > 1.0f)
+                {
+                    stateTimer = 0f;
+                    currentState = Random.Shared.Next(2) == 0 ? "about_to_hit" : "about_to_kick";
+                }
+            }
+        }
+
+        // Attack sequence
+        if (currentState == "about_to_hit" && stateTimer > 0.3f) { currentState = "hitting"; Attack(); }
+        if (currentState == "about_to_kick" && stateTimer > 0.3f) { currentState = "kicking"; Attack(); }
+        if ((currentState == "hitting" || currentState == "kicking") && stateTimer > 0.7f)
+            currentState = "walk";
+
+        // stopping distance based on direction
+        if (currentState == "walk")
+        {
+            float stopDistance = facingLeft ? 210f : 150f;   // ← Tiger on right = farther stop
+
+            if (facingLeft)
+            {
+                if (position.X > _player.Position.X + stopDistance)
+                    position.X -= speed * delta;
             }
             else
             {
-                velocity = Vector2.Zero;
+                if (position.X < _player.Position.X - stopDistance)
+                    position.X += speed * delta;
             }
         }
-        else
-        {
-            velocity = Vector2.Zero; // stop moving during attack or hit
-        }
 
-        // Apply movement
-        position += velocity * (float)gameTime.ElapsedGameTime.TotalSeconds * 60;
+        if (currentState == "hit" && stateTimer > 0.4f) currentState = "walk";
 
-        // Update current animation
+        UpdateCurrentSprite();
         _currentSprite.Update(gameTime);
     }
-
 
 
     public void Draw(SpriteBatch spriteBatch)
     {
         if (IsDead && currentState != "defeated") return;
 
-        // Set the properties ONCE per frame – this is how AnimatedSprite works
-        _currentSprite.Origin      = new Vector2(64, 128);   // feet locked!
-        _currentSprite.Effects     = facingLeft 
-            ? SpriteEffects.FlipHorizontally 
-            : SpriteEffects.None;
+        _currentSprite.Origin = new Vector2(128, 128);  // Bottom-RIGHT pivot
 
-        // Simple draw – uses the Origin and Effects you just set
-        _currentSprite.Draw(spriteBatch, position);
-        
-        
+        _currentSprite.Effects = facingLeft ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
+
+        // move to centre feet at position
+        Vector2 drawPos = position + new Vector2(64, 0);
+
+        _currentSprite.Draw(spriteBatch, drawPos);
     }
 
     public void Attack()

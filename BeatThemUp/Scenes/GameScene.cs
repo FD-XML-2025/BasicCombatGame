@@ -138,12 +138,12 @@ public class GameScene : Scene
         tiger = new Ennemie(
             100f, "Tiger",
             tigerWalk,           // walk
-            tigerPunch,          // aboutToPunch
+            tigerPunch,      // aboutToPunch
             tigerPunch,          //  punch
             tigerKick,           // aboutToKick 
             tigerKick,           // kicking  
             tigerDefeated,       // defeated
-            new Vector2(600, 620),
+            new Vector2(600, 630),
             _player
         );
     }
