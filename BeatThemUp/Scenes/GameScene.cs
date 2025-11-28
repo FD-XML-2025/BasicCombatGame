@@ -110,7 +110,7 @@ public class GameScene : Scene
     private void InitializeNewGame()
     {
         // Calculate the position for the player
-        Vector2 playerPos = new Vector2(0f, 400f);
+        Vector2 playerPos = new Vector2(0, 500);
 
         // Initialize the player
         _player.Initialize(playerPos);
@@ -125,30 +125,27 @@ public class GameScene : Scene
         _timer = new Timer(LEVEL_DURATION);
         _timer.Start();
         
-        Texture2D tigerWalk = Content.Load<Texture2D>("images/Tiger_Enemy/RCG_Walk_09");
-        Texture2D tigerHit = Content.Load<Texture2D>("images/Tiger_Enemy/RCG_Idle_10");
-        Texture2D tigerAboutToHit = Content.Load<Texture2D>("images/Tiger_Enemy/RCG_Attack_Chop_03");
-        Texture2D tigerHitting = Content.Load<Texture2D>("images/Tiger_Enemy/RCG_Attack_Chop_04");
-        Texture2D tigerAboutToKick = Content.Load<Texture2D>("images/Tiger_Enemy/RCG_Attack_Boot_05");
-        Texture2D tigerKicking = Content.Load<Texture2D>("images/Tiger_Enemy/RCG_Attack_Boot_06");
-        Texture2D tigerDefeated = Content.Load<Texture2D>("images/Tiger_Enemy/RCG_Idle_10");
+        // Tiger atlas (NEW)
+        TextureAtlas tigerAtlas = TextureAtlas.FromFile(Core.Content, "images/atlas-tiger.xml");
+        TextureAtlas atlas = TextureAtlas.FromFile(Core.Content, "images/atlas-definition.xml");
         
-        if (tigerWalk == null) throw new Exception("tigerWalk texture failed to load");
-        if (tigerHit == null) throw new Exception("tigerHit texture failed to load");
-        if (tigerAboutToHit == null) throw new Exception("tigerAboutToHit texture failed to load");
-        if (tigerHitting == null) throw new Exception("tigerHitting texture failed to load");
-        if (tigerAboutToKick == null) throw new Exception("tigerAboutToKick texture failed to load");
-        if (tigerKicking == null) throw new Exception("tigerKicking texture failed to load");
-        if (tigerDefeated == null) throw new Exception("tigerDefeated texture failed to load");
+        // Tiger animations
+        AnimatedSprite tigerWalk  = tigerAtlas.CreateAnimatedSprite("tiger_walk");
+        AnimatedSprite tigerPunch = tigerAtlas.CreateAnimatedSprite("tiger_punch");
+        AnimatedSprite tigerKick  = tigerAtlas.CreateAnimatedSprite("tiger_kick");
+        AnimatedSprite tigerDefeated = tigerAtlas.CreateAnimatedSprite("tiger_defeated"); // reuse hit
         
-        /*tiger = new Ennemie(
-            100,
-            "Tiger",
-            tigerWalk, tigerHit, tigerAboutToHit, tigerHitting,
-            tigerAboutToKick, tigerKicking, tigerDefeated,
-            new Vector2(300, 300),
+        tiger = new Ennemie(
+            100f, "Tiger",
+            tigerWalk,           // walk
+            tigerPunch,      // aboutToPunch
+            tigerPunch,          //  punch
+            tigerKick,           // aboutToKick 
+            tigerKick,           // kicking  
+            tigerDefeated,       // defeated
+            new Vector2(600, 630),
             _player
-        );*/
+        );
     }
 
     public override void LoadContent()
@@ -160,10 +157,9 @@ public class GameScene : Scene
 
         // Create the animated sprite for the player from the atlas.
         AnimatedSprite playerAnimation = charactersAtlas.CreateAnimatedSprite("yakuza-male-idle");
-        AnimatedSprite playerAnimationWalk = charactersAtlas.CreateAnimatedSprite("yakuza-male-walk");
 
         // Create the player
-        _player = new Player(playerAnimation, playerAnimationWalk);
+        _player = new Player(playerAnimation);
 
         // Load the bounce sound effect for the bat
         SoundEffect bounceSoundEffect = Content.Load<SoundEffect>("audio/bounce");
@@ -208,7 +204,7 @@ public class GameScene : Scene
         // Update the player;
         _player.Update(gameTime);
         
-        //tiger.Update(gameTime);
+        tiger.Update(gameTime);
         
         // Update the timer
         _timer.Update(gameTime);
@@ -287,7 +283,7 @@ public class GameScene : Scene
     {
         // Clear the back buffer.
         Core.GraphicsDevice.Clear(Color.CornflowerBlue);
-
+        
         if (_state != GameState.Playing)
         {
             // We are in a game over state, so apply the saturation parameter.
@@ -305,7 +301,7 @@ public class GameScene : Scene
         // Draw the player.
         _player.Draw();
         
-        //tiger.Draw(spriteBatch);
+        tiger.Draw(Core.SpriteBatch);
 
         // Always end the sprite batch when finished.
         Core.SpriteBatch.End();

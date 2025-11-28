@@ -1,0 +1,80 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TextureAtlas>
+    <Texture>images/spritesheet(1)</Texture>
+
+    <Regions>
+        <!-- ROW 1 (y=0): Special actions -->
+        <Region name="tiger_before_kick" x="0"     y="0" width="128" height="128"/>   <!-- Frame 1 -->
+        <Region name="tiger_kick"        x="128"   y="0" width="128" height="128"/>   <!-- Frame 2 -->
+        <Region name="tiger_before_punch" x="256" y="0" width="128" height="128"/>   <!-- Frame 3 -->
+        <Region name="tiger_punch"       x="384"   y="0" width="128" height="128"/>   <!-- Frame 4 -->
+        <Region name="tiger_defeated"    x="512"   y="0" width="128" height="128"/>   <!-- Frame 5 - Defeated pose -->
+        <!-- Frame 6 ignored -->
+        <Region name="tiger_before_defeated" x="768" y="0" width="128" height="128"/> <!-- Frame 7 -->
+
+        <!-- ROW 2 (y=128): Walking frames 1–8 -->
+        <Region name="tiger_idle_1" x="0"   y="200" width="128" height="128"/>
+        <Region name="tiger_idle_2" x="128" y="200" width="128" height="128"/>
+        <Region name="tiger_idle_3" x="256" y="200" width="128" height="128"/>
+        <Region name="tiger_idle_4" x="384" y="200" width="128" height="128"/>
+        <Region name="tiger_idle_5" x="512" y="200" width="128" height="128"/>
+        
+        <Region name="tiger_walk_1" x="640" y="200" width="128" height="128"/>
+        <Region name="tiger_walk_2" x="768" y="200" width="128" height="128"/>
+        <Region name="tiger_walk_3" x="896" y="200" width="128" height="128"/>
+
+        <!-- ROW 3 (y=256): Walking frames 9–16 (continuation) -->
+        <Region name="tiger_walk_4"  x="0"   y="330" width="128" height="128"/>
+        <Region name="tiger_walk_5" x="128" y="330" width="128" height="128"/>
+        <Region name="tiger_walk_6" x="256" y="330" width="128" height="128"/>
+        <Region name="tiger_walk_7" x="384" y="330" width="128" height="128"/>
+        <Region name="tiger_walk_8" x="512" y="330" width="128" height="128"/>
+        <Region name="tiger_walk_9" x="640" y="330" width="128" height="128"/>
+        <Region name="tiger_walk_10" x="768" y="330" width="128" height="128"/>
+        <Region name="tiger_walk_11" x="896" y="330" width="128" height="128"/>
+    </Regions>
+    <Animations>
+        <!-- walk cycle -->
+        <Animation name="tiger_walk" delay="90">
+            <Frame region="tiger_walk_1"/>
+            <Frame region="tiger_walk_2"/>
+            <Frame region="tiger_walk_3"/>
+            <Frame region="tiger_walk_4"/>
+            <Frame region="tiger_walk_5"/>
+            <Frame region="tiger_walk_6"/>
+            <Frame region="tiger_walk_7"/>
+            <Frame region="tiger_walk_8"/>
+            <Frame region="tiger_walk_9"/>
+            <Frame region="tiger_walk_10"/>
+            <Frame region="tiger_walk_11"/>
+        </Animation>
+
+        <!-- idle cycle -->
+        <Animation name="tiger_idle" delay="90">
+            <Frame region="tiger_idle_1"/>
+            <Frame region="tiger_idle_2"/>
+            <Frame region="tiger_idle_3"/>
+            <Frame region="tiger_idle_4"/>
+            <Frame region="tiger_idle_5"/>
+        </Animation>
+
+        <!-- kick -->
+        <Animation name="tiger_kick" delay="120">
+            <Frame region="tiger_before_kick"/>
+            <Frame region="tiger_kick"/>
+        </Animation>
+
+        <!-- punch -->
+        <Animation name="tiger_punch" delay="120">
+            <Frame region="tiger_before_punch"/>
+            <Frame region="tiger_punch"/>
+        </Animation>
+
+        <!-- defeated sequence -->
+        <Animation name="tiger_defeated" delay="200">
+            <Frame region="tiger_before_defeated"/>
+            <Frame region="tiger_defeated"/>
+        </Animation>
+       
+    </Animations>
+</TextureAtlas>

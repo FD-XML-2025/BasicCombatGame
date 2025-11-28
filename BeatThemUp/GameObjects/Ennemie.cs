@@ -1,29 +1,28 @@
 using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using MonoGameLibrary.Graphics;
 
 namespace BeatThemUp.GameObjects;
 
 public class Ennemie
 {
-    private Texture2D textureWalk;
-    private Texture2D textureHit;
-    private Texture2D textureAboutToHit;
-    private Texture2D textureHitting;
-    private Texture2D textureAboutToKick;
-    private Texture2D textureKicking;
-    private Texture2D textureDefeated;
-    private Texture2D currentTexture; // What animation currently being shown like if tiger is resting 
+    private float attackStartX;   //  tiger pos when attack started
+    private float playerStartX;   // player pos when attack started
+    private AnimatedSprite _walkSprite, _aboutToHitSprite, _hittingSprite;
+    private AnimatedSprite _aboutToKickSprite, _kickingSprite, _defeatedSprite;
+    private AnimatedSprite _currentSprite;
     private Vector2 position;
     private Vector2 velocity;
-    private Joueur joueur;
+    private Character _player;
     private float speed;
     private double hp;
     private string type;
-    private string currentState; // Tracks the current animation state
-    private float stateTimer; // Timer to switch states
-    private const float StateDuration = 0.5f; // Duration 0.5secs
-
+    private string currentState; // animation state
+    private float stateTimer;
+    private const float StateDuration = 0.5f;
+    private readonly Vector2 origin = new Vector2(64, 128); // Bottom-center
+    private bool facingLeft = true;
     public bool IsDead
     {
         get { return hp <= 0; }
@@ -38,135 +37,123 @@ public class Ennemie
         get => !IsDead; 
     }
 
-    public Ennemie(double hp, string type, Texture2D textureWalk, Texture2D textureHit,
-                   Texture2D textureAboutToHit, Texture2D textureHitting,
-                   Texture2D textureAboutToKick, Texture2D textureKicking,
-                   Texture2D textureDefeated, Vector2 position, Joueur joueur)
+    public Ennemie(float hp, string type, 
+        AnimatedSprite walk, AnimatedSprite aboutToHit, AnimatedSprite hitting,
+        AnimatedSprite aboutToKick, AnimatedSprite kicking, AnimatedSprite defeated,
+        Vector2 position, Character player)
     {
         this.hp = hp;
         this.type = type;
-        this.textureWalk = textureWalk;
-        this.textureHit = textureHit;
-        this.textureAboutToHit = textureAboutToHit;
-        this.textureHitting = textureHitting;
-        this.textureAboutToKick = textureAboutToKick;
-        this.textureKicking = textureKicking;
-        this.textureDefeated = textureDefeated;
+        _walkSprite = walk;
+        _aboutToHitSprite = aboutToHit;
+        _hittingSprite = hitting;
+        _aboutToKickSprite = aboutToKick;
+        _kickingSprite = kicking;
+        _defeatedSprite = defeated;
         this.position = position;
-        this.joueur = joueur;
-        this.speed = 2f;
+        this._player = player;
+        this.speed = 100f;
         this.velocity = Vector2.Zero;
-        this.currentState = "walk"; // Resting
+        this.currentState = "walk";
         this.stateTimer = 0f;
-        UpdateCurrentTexture();
+        UpdateCurrentSprite();
     }
 
-    private void UpdateCurrentTexture()
+    private void UpdateCurrentSprite()
     {
+        _currentSprite = currentState switch
+        {
+            "walk"           => _walkSprite,
+            "hit"            => _aboutToHitSprite,
+            "about_to_hit"   => _aboutToHitSprite,
+            "hitting"        => _hittingSprite,
+            "about_to_kick"  => _aboutToKickSprite,
+            "kicking"        => _kickingSprite,
+            "defeated"       => _defeatedSprite,
+            _                => _walkSprite
+        };
+    }
+
+    public void Update(GameTime gameTime)
+    {
+        float delta = (float)gameTime.ElapsedGameTime.TotalSeconds;
+        stateTimer += delta;
+
+        if (hp <= 0)
+        {
+            currentState = "defeated";
+            UpdateCurrentSprite();
+            _currentSprite.Update(gameTime);
+            return;
+        }
+
+        float playerX = _player.Position.X;
+        float tigerX  = position.X;
+
+        if (currentState == "walk" || currentState == "hit")
+            facingLeft = playerX < tigerX;
+
+        // Start attack when close enough
         if (currentState == "walk")
         {
-            currentTexture = textureWalk;
-        }
-        else if (currentState == "hit")
-        {
-            currentTexture = textureHit;
-        }
-        else if (currentState == "about_to_hit")
-        {
-            currentTexture = textureAboutToHit;
-        }
-        else if (currentState == "hitting")
-        {
-            currentTexture = textureHitting;
-        }
-        else if (currentState == "about_to_kick")
-        {
-            currentTexture = textureAboutToKick;
-        }
-        else if (currentState == "kicking")
-        {
-            currentTexture = textureKicking;
-        }
-        else if (currentState == "defeated")
-        {
-            currentTexture = textureDefeated;
-        }
-        else
-        {
-            currentTexture = textureWalk; // Default to walk if state is invalid
-        }
-    }
-
-    public void Update(GameTime gameTime, Joueur player)
-    {
-        stateTimer += (float)gameTime.ElapsedGameTime.TotalSeconds;
-        if (stateTimer >= StateDuration)
-        {
-            stateTimer = 0f; // resets timer
-            if (IsDead)
+            bool inFront = facingLeft ? (playerX < tigerX) : (playerX > tigerX);
+            if (inFront && Math.Abs(playerX - tigerX) < 220f)
             {
-                currentState = "defeated";
-            }
-            else if (Vector2.Distance(position, player.Position) < 50 && currentState != "hitting" && currentState != "kicking")
-            {
-                currentState = (Random.Shared.Next(2) == 0) ? "about_to_hit" : "about_to_kick";
-            }
-            else if (currentState == "about_to_hit" || currentState == "about_to_kick")
-            {
-                currentState = currentState == "about_to_hit" ? "hitting" : "kicking"; // If adding more attacks fix this 
-                if (currentState == "hitting" || currentState == "kicking")
+                if (stateTimer > 1.0f)
                 {
-                    Attack(player);
+                    stateTimer = 0f;
+                    currentState = Random.Shared.Next(2) == 0 ? "about_to_hit" : "about_to_kick";
                 }
             }
-            else if (currentState == "hitting" || currentState == "kicking")
-            {
-                currentState = "walk";
-            }
-            else if (!IsDead)
-            {
-                currentState = "walk";
-            }
-            UpdateCurrentTexture();
         }
 
-        // Move toward the player
-        Vector2 direction = player.Position - position;
-        if (direction.LengthSquared() > 0 && currentState == "walk")
-        {
-            direction.Normalize();
-            velocity = direction * speed;
-        }
-        else
-        {
-            velocity = Vector2.Zero; // Stop moving during attack or hit states
-        }
+        // Attack sequence
+        if (currentState == "about_to_hit" && stateTimer > 0.3f) { currentState = "hitting"; Attack(); }
+        if (currentState == "about_to_kick" && stateTimer > 0.3f) { currentState = "kicking"; Attack(); }
+        if ((currentState == "hitting" || currentState == "kicking") && stateTimer > 0.7f)
+            currentState = "walk";
 
-        position += velocity * (float)gameTime.ElapsedGameTime.TotalSeconds * 60; // IDK what fps we're running
-
-        // Transition from "about_to_hit" or "about_to_kick" to "hitting" or "kicking" after a short delay
-        if ((currentState == "about_to_hit" || currentState == "about_to_kick") && stateTimer >= StateDuration / 2)
+        // stopping distance based on direction
+        if (currentState == "walk")
         {
-            currentState = currentState == "about_to_hit" ? "hitting" : "kicking";
-            UpdateCurrentTexture();
-            if (currentState == "hitting" || currentState == "kicking")
+            float stopDistance = facingLeft ? 210f : 150f;   // Tiger on right = further stop because image isn't symmetric
+
+            if (facingLeft)
             {
-                Attack(player);
+                if (position.X > _player.Position.X + stopDistance)
+                    position.X -= speed * delta;
+            }
+            else
+            {
+                if (position.X < _player.Position.X - stopDistance)
+                    position.X += speed * delta;
             }
         }
+
+        if (currentState == "hit" && stateTimer > 0.4f) currentState = "walk";
+
+        UpdateCurrentSprite();
+        _currentSprite.Update(gameTime);
     }
+
 
     public void Draw(SpriteBatch spriteBatch)
     {
-        if (!IsDead || currentState == "defeated") // enemy doesn't actually disappear
-        {
-            spriteBatch.Draw(currentTexture, position, Color.White);
-        }
+        if (IsDead && currentState != "defeated") return;
+
+        _currentSprite.Origin = new Vector2(128, 128);  // Bottom-RIGHT pivot
+
+        _currentSprite.Effects = facingLeft ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
+
+        // move to centre feet at position
+        Vector2 drawPos = position + new Vector2(64, 0);
+
+        _currentSprite.Draw(spriteBatch, drawPos);
     }
 
-    public void Attack(Joueur player)
+    public void Attack()
     {
-        player.TakeDamage(10); // need to adjust damage separate for kicks and hits
+        _player.TakeDamage(10); // need to adjust damage separate for kicks and hits
     }
 
     public void TakeDamage(double damage)
@@ -176,7 +163,7 @@ public class Ennemie
         {
             currentState = "hit";
             stateTimer = 0f;
-            UpdateCurrentTexture();
+            UpdateCurrentSprite();
         }
     }
 }
