@@ -18,15 +18,13 @@ public class Player : Character
         _idleSprite = sprite;
         _walkSprite = walkSprite;
         
-        // Default the scale to x2 because 128x128 was too little
-        Scale = new Vector2(2f, 2f);
         Sprite = _idleSprite;
     }
 
     public void Initialize(Vector2 startingPosition)
     {
         // Setup the player position
-        Position = startingPosition;
+        Position = startingPosition - new Vector2(_idleSprite.Width / 2, _idleSprite.Height / 2);
     }
     
     public override void Update(GameTime gameTime)
@@ -66,7 +64,8 @@ public class Player : Character
         // Handle backward movement
         if (GameController.MoveBackward())
         {
-            Velocity.X = -_moveSpeed;
+            if (Position.X > 0f)
+                Velocity.X = -_moveSpeed;
         }
 
         // Handle forward movement

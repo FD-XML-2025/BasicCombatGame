@@ -30,7 +30,7 @@ public class Ennemie
     public Vector2 Position
     {
         get => position; 
-        set => position = value;
+        set => position = value - new Vector2(_currentSprite.Width / 2, _currentSprite.Height / 2);
     }
     public bool IsAlive
     {
@@ -148,6 +148,7 @@ public class Ennemie
         // move to centre feet at position
         Vector2 drawPos = position + new Vector2(64, 0);
 
+        _currentSprite.Scale = new Vector2(2f, 2f);
         _currentSprite.Draw(spriteBatch, drawPos);
     }
 

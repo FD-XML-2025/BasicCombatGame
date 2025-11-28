@@ -110,7 +110,7 @@ public class GameScene : Scene
     private void InitializeNewGame()
     {
         // Calculate the position for the player
-        Vector2 playerPos = new Vector2(0, 500);
+        Vector2 playerPos = new Vector2(0, 400f);
 
         // Initialize the player
         _player.Initialize(playerPos);
@@ -143,7 +143,7 @@ public class GameScene : Scene
             tigerKick,           // aboutToKick 
             tigerKick,           // kicking  
             tigerDefeated,       // defeated
-            new Vector2(600, 630),
+            new Vector2(600f, 400f),
             _player
         );
     }
@@ -156,10 +156,11 @@ public class GameScene : Scene
         TextureAtlas charactersAtlas = TextureAtlas.FromFile(Core.Content, "images/atlas-definition-characters.xml");
 
         // Create the animated sprite for the player from the atlas.
-        AnimatedSprite playerAnimation = charactersAtlas.CreateAnimatedSprite("yakuza-male-idle");
+        AnimatedSprite playerIdleAnimation = charactersAtlas.CreateAnimatedSprite("yakuza-male-idle");
+        AnimatedSprite playerWalkAnimation = charactersAtlas.CreateAnimatedSprite("yakuza-male-walk");
 
         // Create the player
-        _player = new Player(playerAnimation);
+        _player = new Player(playerIdleAnimation, playerWalkAnimation);
 
         // Load the bounce sound effect for the bat
         SoundEffect bounceSoundEffect = Content.Load<SoundEffect>("audio/bounce");

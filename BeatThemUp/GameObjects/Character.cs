@@ -97,6 +97,7 @@ public class Character : Actor
     public Character(AnimatedSprite sprite)
     {
         Sprite = sprite;
+        Scale = new Vector2(2f, 2f);
     }
     
     // Determine wether the character is idle
