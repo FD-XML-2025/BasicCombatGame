@@ -42,6 +42,10 @@ public class GameSceneUI : ContainerRuntime
     // The text runtime used to display the timer on the game screen.
     private TextRuntime _timerText;
 
+    private ColoredRectangleRuntime _healthBarBackground;
+    
+    private ColoredRectangleRuntime _healthBar;
+
     /// <summary>
     /// Event invoked when the Resume button on the Pause panel is clicked.
     /// </summary>
@@ -83,6 +87,8 @@ public class GameSceneUI : ContainerRuntime
 
         _timerText = CreateTimerText();
         AddChild(_timerText);
+        
+        CreateHealthBar();
 
         // Create the Pause panel that is displayed when the game is paused and
         // add it as a child to this container
@@ -93,6 +99,35 @@ public class GameSceneUI : ContainerRuntime
         // and add it as a child to this container
         _gameOverPanel = CreateGameOverPanel(atlas);
         AddChild(_gameOverPanel.Visual);
+    }
+
+    private void CreateHealthBar()
+    {
+        _healthBarBackground = new ColoredRectangleRuntime();
+        _healthBarBackground.Anchor(Gum.Wireframe.Anchor.TopLeft);
+        _healthBarBackground.WidthUnits = DimensionUnitType.RelativeToChildren;
+        _healthBarBackground.HeightUnits = DimensionUnitType.RelativeToChildren;
+        _healthBarBackground.Width = 100f;
+        _healthBarBackground.Height = 15f;
+        _healthBarBackground.X = 5.0f;
+        _healthBarBackground.Y = 5.0f;
+        _healthBarBackground.UseCustomFont = true;
+        _healthBarBackground.CustomFontFile = "fonts/04b_30.fnt";
+        _healthBarBackground.Color = new Color(150, 0, 0);
+        AddChild(_healthBarBackground);
+
+        _healthBar = new ColoredRectangleRuntime();
+        _healthBar.Anchor(Gum.Wireframe.Anchor.TopLeft);
+        _healthBar.WidthUnits = DimensionUnitType.RelativeToChildren;
+        _healthBar.HeightUnits = DimensionUnitType.RelativeToChildren;
+        _healthBar.Width = 97.5f;
+        _healthBar.Height = 13f;
+        _healthBar.X = 6.5f;
+        _healthBar.Y = 6f;
+        _healthBar.UseCustomFont = true;
+        _healthBar.CustomFontFile = "fonts/04b_30.fnt";
+        _healthBar.Color = new Color(255, 0, 0);
+        AddChild(_healthBar);
     }
 
     private TextRuntime CreateScoreText()

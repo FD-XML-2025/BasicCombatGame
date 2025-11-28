@@ -21,9 +21,9 @@ namespace BeatThemUp.Scenes;
 
 public class TitleScene : Scene
 {
-    private const string DUNGEON_TEXT = "Beat Them";
-    private const string SLIME_TEXT = "Up!";
-    private const string PRESS_ENTER_TEXT = "Press Enter To Start";
+    private const string DUNGEON_TEXT = "Yakuza's";
+    private const string SLIME_TEXT = "Revenge";
+    private const string PRESS_ENTER_TEXT = "Press To Start";
 
     // The font to use to render normal text.
     private SpriteFont _font;
@@ -223,7 +223,7 @@ public class TitleScene : Scene
 
     private void HandleQuitClicked(object sender, EventArgs e)
     {
-    
+        
     }
 
     private void CreateOptionsPanel()

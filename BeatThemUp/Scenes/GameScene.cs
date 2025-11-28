@@ -110,7 +110,7 @@ public class GameScene : Scene
     private void InitializeNewGame()
     {
         // Calculate the position for the player
-        Vector2 playerPos = Vector2.Zero;
+        Vector2 playerPos = new Vector2(0f, 400f);
 
         // Initialize the player
         _player.Initialize(playerPos);
@@ -160,9 +160,10 @@ public class GameScene : Scene
 
         // Create the animated sprite for the player from the atlas.
         AnimatedSprite playerAnimation = charactersAtlas.CreateAnimatedSprite("yakuza-male-idle");
+        AnimatedSprite playerAnimationWalk = charactersAtlas.CreateAnimatedSprite("yakuza-male-walk");
 
         // Create the player
-        _player = new Player(playerAnimation);
+        _player = new Player(playerAnimation, playerAnimationWalk);
 
         // Load the bounce sound effect for the bat
         SoundEffect bounceSoundEffect = Content.Load<SoundEffect>("audio/bounce");

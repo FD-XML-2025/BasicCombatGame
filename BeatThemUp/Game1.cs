@@ -20,9 +20,9 @@ public class Game1 : Core
     
     private SpriteBatch spriteBatch;
 
-    public Game1() : base("Beat Them Up!", 1280, 720, false)
+    public Game1() : base("Yakuza's Revenge", 1280, 720, false)
     {
-
+        
     }
 
     protected override void Initialize()

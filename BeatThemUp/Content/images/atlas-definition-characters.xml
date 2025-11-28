@@ -10,6 +10,18 @@
         <Region name="yakuza-male-idle-6" x="640" y="0" width="128" height="128" />
         <Region name="yakuza-male-idle-7" x="768" y="0" width="128" height="128" />
         <Region name="yakuza-male-idle-8" x="896" y="0" width="128" height="128" />
+        <Region name="yakuza-male-walk-1" x="0" y="256" width="128" height="128" />
+        <Region name="yakuza-male-walk-2" x="128" y="256" width="128" height="128" />
+        <Region name="yakuza-male-walk-3" x="256" y="256" width="128" height="128" />
+        <Region name="yakuza-male-walk-4" x="384" y="256" width="128" height="128" />
+        <Region name="yakuza-male-walk-5" x="512" y="256" width="128" height="128" />
+        <Region name="yakuza-male-walk-6" x="640" y="256" width="128" height="128" />
+        <Region name="yakuza-male-walk-7" x="768" y="256" width="128" height="128" />
+        <Region name="yakuza-male-walk-8" x="896" y="256" width="128" height="128" />
+        <Region name="yakuza-male-walk-9" x="0" y="384" width="128" height="128" />
+        <Region name="yakuza-male-walk-10" x="128" y="384" width="128" height="128" />
+        <Region name="yakuza-male-walk-11" x="256" y="384" width="128" height="128" />
+        <Region name="yakuza-male-walk-12" x="384" y="384" width="128" height="128" />
     </Regions>
     <Animations>
         <Animation name="yakuza-male-idle" delay="200">
@@ -21,6 +33,20 @@
             <Frame region="yakuza-male-idle-6" />
             <Frame region="yakuza-male-idle-7" />
             <Frame region="yakuza-male-idle-8" />
+        </Animation>
+        <Animation name="yakuza-male-walk" delay="200">
+            <Frame region="yakuza-male-walk-1" />
+            <Frame region="yakuza-male-walk-2" />
+            <Frame region="yakuza-male-walk-3" />
+            <Frame region="yakuza-male-walk-4" />
+            <Frame region="yakuza-male-walk-5" />
+            <Frame region="yakuza-male-walk-6" />
+            <Frame region="yakuza-male-walk-7" />
+            <Frame region="yakuza-male-walk-8" />
+            <Frame region="yakuza-male-walk-9" />
+            <Frame region="yakuza-male-walk-10" />
+            <Frame region="yakuza-male-walk-11" />
+            <Frame region="yakuza-male-walk-12" />
         </Animation>
     </Animations>
 </TextureAtlas>

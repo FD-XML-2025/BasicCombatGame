@@ -13,7 +13,7 @@ public abstract class Actor
     // direction to update the actor position each update cycle.
     public Vector2 Velocity;
 
-    public Vector2 Size;
+    public Vector2 Scale;
     
     public float Rotation { get; set; }
     
@@ -23,7 +23,7 @@ public abstract class Actor
     {
         Position = Vector2.Zero;
         Velocity = Vector2.Zero;
-        Size = Vector2.One;
+        Scale = Vector2.One;
         Rotation = 0f;
     }
 

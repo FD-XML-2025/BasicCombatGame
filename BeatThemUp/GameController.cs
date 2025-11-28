@@ -24,7 +24,7 @@ public static class GameController
                s_gamePad.IsButtonDown(Buttons.DPadLeft) ||
                s_gamePad.IsButtonDown(Buttons.LeftThumbstickLeft);
     }
-
+    
     /// <summary>
     /// Returns true if the player has triggered the "move forward" action.
     /// </summary>

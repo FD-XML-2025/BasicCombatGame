@@ -1,0 +1,72 @@
+<?xml version="1.0"?>
+<schema version="1.0"
+        xmlns="http://www.w3.org/2001/XMLSchema"
+        xmlns:yr="http://www.yakuzasrevenge/settings"
+        targetNamespace="http://www.yakuzasrevenge/settings"
+        elementFormDefault="qualified">
+    
+    <element name="settings" type="yr:Settings"/>
+
+    <!-- Root Content -->
+    <complexType name="Settings">
+        <sequence>
+            <element name="volume" type="yr:Volume"/>
+            <element name="windowMode" type="yr:WindowMode"/>
+            <element name="screenResolution" type="yr:ScreenResolution"/>
+            <element name="fps" type="yr:FPS"/>
+            <element name="quality" type="yr:Quality"/>
+        </sequence>
+    </complexType>
+    
+    <!-- Volumes -->
+    <complexType name="Volume">
+        <sequence>
+            <element name="general" type="yr:Multiplier"/>
+            <element name="music" type="yr:Multiplier"/>
+            <element name="sfx" type="yr:Multiplier"/>
+            <element name="ui" type="yr:Multiplier"/>
+        </sequence>
+    </complexType>
+    
+    <!-- Multiplier is a float in the range 0.0 - 1.0 -->
+    <simpleType name="Multiplier">
+        <restriction base="float">
+            <minInclusive value="0"/>
+            <maxInclusive value="1"/>
+        </restriction>
+    </simpleType>
+    
+    <!-- Window mode type -->
+    <simpleType name="WindowMode">
+        <restriction base="string">
+            <enumeration value="Full Screen"/>
+            <enumeration value="Windowed"/>
+            <enumeration value="Windowed Borderless"/>
+        </restriction>
+    </simpleType>
+
+    <!-- Screen resolution -->
+    <simpleType name="ScreenResolution">
+        <restriction base="string">
+            <enumeration value="16/9"/>
+            <enumeration value="4/3"/>
+        </restriction>
+    </simpleType>
+    
+    <!-- FPS type, -1 means unlimited, 540 is the maximum reachable in nowadays computers -->
+    <simpleType name="FPS">
+        <restriction base="integer">
+            <minInclusive value="-1"/>
+            <maxInclusive value="540"/>
+        </restriction>
+    </simpleType>
+    
+    <!-- 4 graphical qualities -->
+    <simpleType name="Quality">
+        <restriction base="string">
+            <enumeration value="Low"/>
+            <enumeration value="Medium"/>
+            <enumeration value="High"/>
+        </restriction>
+    </simpleType>
+</schema>

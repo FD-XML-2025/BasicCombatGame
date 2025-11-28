@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<schema version="1.0"
+        xmlns="http://www.w3.org/2001/XMLSchema"
+        xmlns:yr="http://www.yakuzasrevenge/credits"
+        targetNamespace="http://www.yakuzasrevenge/credits"
+        elementFormDefault="qualified">
+
+    <element name="credits" type="yr:Credits"/>
+
+    <!-- Root Content -->
+    <complexType name="Credits">
+        <sequence>
+            <element name="credit" type="yr:Credit" minOccurs="0" maxOccurs="unbounded"/>
+        </sequence>
+    </complexType>
+    
+    <!-- A credit is composed of a name and URL for the dev portfolio -->
+    <complexType name="Credit">
+        <sequence>
+            <element name="name" type="string"/>
+            <element name="url" type="anyURI"/>
+        </sequence>
+    </complexType>
+</schema>

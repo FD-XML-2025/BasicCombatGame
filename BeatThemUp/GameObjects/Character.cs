@@ -8,8 +8,6 @@ namespace BeatThemUp.GameObjects;
 public class Character : Actor
 {
     // The AnimatedSprite used when drawing each slime segment
-    private AnimatedSprite _sprite;
-
     private float _health;
     
     private float _maxHealth;
@@ -17,6 +15,10 @@ public class Character : Actor
     private Weapon _weapon;
 
     private bool _isParrying;
+    
+    private bool _wasMoving;
+
+    public AnimatedSprite Sprite { get; set; }
 
     public Weapon Weapon
     {
@@ -94,19 +96,41 @@ public class Character : Actor
     /// <param name="sprite">The AnimatedSprite to use when drawing the character.</param>
     public Character(AnimatedSprite sprite)
     {
-        _sprite = sprite;
+        Sprite = sprite;
+    }
+    
+    // Determine wether the character is idle
+    public bool IsIdle()
+    {
+        return Velocity ==  Vector2.Zero;
+    }
+
+    // Determine wether the character is walking
+    public bool IsWalking()
+    {
+        return Velocity.Length() > 0;
     }
 
     /// <summary>
-    /// Updates the slime.
+    /// Updates the character.
     /// </summary>
     /// <param name="gameTime">A snapshot of the timing values for the current update cycle.</param>
     public override void Update(GameTime gameTime)
     {
         base.Update(gameTime);
         
+        // Call Start/Move events
+        if (_wasMoving != IsWalking())
+        {
+            if (_wasMoving)
+                OnStopMove();
+            else
+                OnStartMove();
+        }
+        
         // Update the animated sprite.
-        _sprite.Update(gameTime);
+        Sprite.Scale = Scale;
+        Sprite.Update(gameTime);
     }
 
     /// <summary>
@@ -116,7 +140,7 @@ public class Character : Actor
     {
         base.Draw();
         
-        _sprite.Draw(Core.SpriteBatch, Position);
+        Sprite.Draw(Core.SpriteBatch, Position);
     }
 
     /// <summary>
@@ -127,11 +151,27 @@ public class Character : Actor
     {
         // Create the bounds.
         Circle bounds = new Circle(
-            (int)(Position.X + (_sprite.Width * 0.5f)),
-            (int)(Position.Y + (_sprite.Height * 0.5f)),
-            (int)(_sprite.Width * 0.5f)
+            (int)(Position.X + (Sprite.Width * 0.5f)),
+            (int)(Position.Y + (Sprite.Height * 0.5f)),
+            (int)(Sprite.Width * 0.5f)
         );
 
         return bounds;
+    }
+    
+    public virtual void OnStartMove()
+    {
+        if (_wasMoving) return;
+        
+        _wasMoving = true;
+    }
+
+    public virtual void OnStopMove()
+    {
+        if (!_wasMoving) return;
+        
+        _wasMoving = false;
+
+        Sprite = new AnimatedSprite();
     }
 }

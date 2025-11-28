@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<credits
+        xmlns='http://www.yakuzasrevenge/credits'
+        xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+        xsi:schemaLocation='http://www.yakuzasrevenge/credits credits.xsd'>
+    
+    <credit>
+        <name>Valentin Chene</name>
+        <url>https://github.com/Sarbatore</url>
+    </credit>
+    <credit>
+        <name>Adam Nedic</name>
+        <url>https://github.com/Anedi1</url>
+    </credit>
+    <credit>
+        <name>Minh Huy Nguyen</name>
+        <url>https://github.com/minhhuy20916</url>
+    </credit>
+    <credit>
+        <name>Nguyen Phuoc Loc Luu</name>
+        <url>https://github.com/luunpl</url>
+    </credit>
+</credits>

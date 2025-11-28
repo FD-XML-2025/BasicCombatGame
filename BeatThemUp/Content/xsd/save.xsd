@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<schema version="1.0"
+        xmlns="http://www.w3.org/2001/XMLSchema"
+        xmlns:yr="http://www.yakuzasrevenge/save"
+        targetNamespace="http://www.yakuzasrevenge/save"
+        elementFormDefault="qualified">
+
+    <element name="save" type="yr:Save"/>
+
+    <!-- Root Content -->
+    <complexType name="Save">
+        <sequence>
+            <element name="highestScore" type="positiveInteger"/>
+            <element name="bestTime" type="positiveInteger"/>
+            <element name="enemiesKilled" type="positiveInteger"/>
+        </sequence>
+    </complexType>
+</schema>
