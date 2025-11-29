@@ -25,9 +25,9 @@ public class GameScene : Scene
 
     // Reference to the player.
     private Player _player;
-    
-    private Ennemie tiger;
 
+    private EnemyManager _enemyManager;
+    
     // The sound effect to play when the player ...
     private SoundEffect _collectSoundEffect;
 
@@ -54,7 +54,7 @@ public class GameScene : Scene
     {
         // LoadContent is called during base.Initialize().
         base.Initialize();
-
+        
         // During the game scene, we want to disable exit on escape. Instead,
         // the escape key will be used to return back to the title screen
         Core.ExitOnEscape = false;
@@ -111,10 +111,12 @@ public class GameScene : Scene
     {
         // Calculate the position for the player
         Vector2 playerPos = new Vector2(0, 400f);
-
+        
         // Initialize the player
         _player.Initialize(playerPos);
 
+        _enemyManager = new EnemyManager(_player);
+        
         // Reset the score
         _score = 0;
 
@@ -135,7 +137,7 @@ public class GameScene : Scene
         AnimatedSprite tigerKick  = tigerAtlas.CreateAnimatedSprite("tiger_kick");
         AnimatedSprite tigerDefeated = tigerAtlas.CreateAnimatedSprite("tiger_defeated"); // reuse hit
         
-        tiger = new Ennemie(
+        var tiger = new Ennemie(
             100f, "Tiger",
             tigerWalk,           // walk
             tigerPunch,      // aboutToPunch
@@ -143,9 +145,10 @@ public class GameScene : Scene
             tigerKick,           // aboutToKick 
             tigerKick,           // kicking  
             tigerDefeated,       // defeated
-            new Vector2(600f, 400f),
+            new Vector2(600f, 550f),
             _player
         );
+        _enemyManager.AddEnemy(tiger);
     }
 
     public override void LoadContent()
@@ -205,10 +208,9 @@ public class GameScene : Scene
         // Update the player;
         _player.Update(gameTime);
         
-        tiger.Update(gameTime);
-        
         // Update the timer
-        _timer.Update(gameTime);
+        _enemyManager.Update(gameTime);
+
         _ui.UpdateTimerText((int)_timer.GetRemainingTime());
 
         if (_timer.IsFinished())
@@ -302,7 +304,7 @@ public class GameScene : Scene
         // Draw the player.
         _player.Draw();
         
-        tiger.Draw(Core.SpriteBatch);
+        _enemyManager.Draw(Core.SpriteBatch);
 
         // Always end the sprite batch when finished.
         Core.SpriteBatch.End();
