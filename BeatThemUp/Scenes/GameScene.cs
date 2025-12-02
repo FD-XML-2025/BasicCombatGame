@@ -140,12 +140,12 @@ public class GameScene : Scene
 
         var tiger = new Ennemie(
             100f, "Tiger",
-            tigerWalk,           // walk
-            tigerPunch,      // aboutToPunch
-            tigerPunch,          //  punch
-            tigerKick,           // aboutToKick 
-            tigerKick,           // kicking  
-            tigerDefeated,       // defeated
+            tigerWalk, // walk
+            tigerPunch, // aboutToPunch
+            tigerPunch, //  punch
+            tigerKick, // aboutToKick 
+            tigerKick, // kicking  
+            tigerDefeated, // defeated
             tigerIdle,
             new Vector2(600f, 550f),
             _player
@@ -206,7 +206,7 @@ public class GameScene : Scene
         {
             return;
         }
-
+    
         // Update the player;
         _player.Update(gameTime);
         
@@ -244,7 +244,7 @@ public class GameScene : Scene
             }
         }
 
-
+        _timer.Update(gameTime);
         _ui.UpdateTimerText((int)_timer.GetRemainingTime());
 
         if (_timer.IsFinished())
