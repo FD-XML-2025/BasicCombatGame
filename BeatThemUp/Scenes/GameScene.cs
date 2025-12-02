@@ -136,7 +136,8 @@ public class GameScene : Scene
         AnimatedSprite tigerPunch = tigerAtlas.CreateAnimatedSprite("tiger_punch");
         AnimatedSprite tigerKick  = tigerAtlas.CreateAnimatedSprite("tiger_kick");
         AnimatedSprite tigerDefeated = tigerAtlas.CreateAnimatedSprite("tiger_defeated"); // reuse hit
-        
+        AnimatedSprite tigerIdle = tigerAtlas.CreateAnimatedSprite("tiger_idle");
+
         var tiger = new Ennemie(
             100f, "Tiger",
             tigerWalk,           // walk
@@ -145,6 +146,7 @@ public class GameScene : Scene
             tigerKick,           // aboutToKick 
             tigerKick,           // kicking  
             tigerDefeated,       // defeated
+            tigerIdle,
             new Vector2(600f, 550f),
             _player
         );
@@ -177,7 +179,7 @@ public class GameScene : Scene
 
     public override void Update(GameTime gameTime)
     {
-        // Ensure the UI is always updated
+        // UI is always updated
         _ui.Update(gameTime);
 
         if (_state != GameState.Playing)
@@ -210,6 +212,38 @@ public class GameScene : Scene
         
         // Update the timer
         _enemyManager.Update(gameTime);
+        
+        // Wall so player cannot pass the enemies
+        var tiger = _enemyManager.FirstEnemy;
+
+        if (tiger != null)
+        {
+            float tigerFront = tiger.Position.X - 180f; // spacing for wall
+
+            if (_player.Position.X > tigerFront)
+            {
+                _player.Position = new Vector2(tigerFront, _player.Position.Y);
+            }
+        }
+
+        // Debugging for HP values to the console
+        Console.WriteLine($"Player HP: {_player.Health}");
+
+        foreach (var enemy in _enemyManager.Enemies)
+        {
+            Console.WriteLine($"{enemy.GetType().Name} HP: {enemy.GetHp()}");
+        }
+
+        for (int i = 0; i < _enemyManager.Enemies.Count; i++)
+        {
+            var enemy = _enemyManager.Enemies[i];
+
+            if (_player.IsAttacking && _player.GetBounds().Intersects(enemy.GetBounds()))
+            {
+                enemy.TakeDamage(_player.Damage);
+            }
+        }
+
 
         _ui.UpdateTimerText((int)_timer.GetRemainingTime());
 

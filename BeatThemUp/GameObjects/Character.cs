@@ -8,9 +8,9 @@ namespace BeatThemUp.GameObjects;
 public class Character : Actor
 {
     // The AnimatedSprite used when drawing each slime segment
-    private float _health;
+    private float _health = 100f;
     
-    private float _maxHealth;
+    private float _maxHealth = 100f;
 
     private Weapon _weapon;
 

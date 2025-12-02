@@ -1,231 +1,279 @@
 using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using MonoGameLibrary;
 using MonoGameLibrary.Graphics;
 
 namespace BeatThemUp.GameObjects;
 
 public class Ennemie
 {
-    // State and animation data
-    private float attackStartX;
-    private float playerStartX;
-    private AnimatedSprite _walkSprite, _aboutToHitSprite, _hittingSprite;
-    private AnimatedSprite _aboutToKickSprite, _kickingSprite, _defeatedSprite;
-    private AnimatedSprite _currentSprite;
+    // enemy states
+    private enum EnemyState
+    {
+        Walk,
+        AboutToHit,
+        Hitting,
+        AboutToKick,
+        Kicking,
+        Idle,
+        Hit,
+        Defeated
+    }
 
-    // Positioning and movement
+    // animations
+    private AnimatedSprite walk, aboutHit, hit, aboutKick, kick, defeated, idle;
+    private AnimatedSprite current;
+
+    // movement and player reference
     private Vector2 position;
-    private Vector2 velocity;
-    private Character _player;
-    private float speed;
+    private Character player;
+    private float speed = 100f;
 
-    // Attributes
+    // health
     private double hp;
-    private string type;
-    private string currentState;
+    public double GetHp() => hp;
+
+    // state machine
+    private EnemyState state = EnemyState.Walk;
     private float stateTimer;
-    private const float StateDuration = 0.5f;
-    private bool facingLeft = true;
+
+    private const float AttackRange = 300f;
+    private const float StopDistance = 300f;
 
     public bool IsDead => hp <= 0;
-    public bool IsAlive => !IsDead;
 
     public Vector2 Position
     {
         get => position;
-        set => position = value - new Vector2(_currentSprite.Width / 2, _currentSprite.Height / 2);
+        set => position = value - new Vector2(current.Width / 2, current.Height / 2);
     }
 
-    public Ennemie(float hp, string type,
-        AnimatedSprite walk, AnimatedSprite aboutToHit, AnimatedSprite hitting,
-        AnimatedSprite aboutToKick, AnimatedSprite kicking, AnimatedSprite defeated,
+    public Ennemie(
+        float hp,
+        string type,
+        AnimatedSprite walk, AnimatedSprite aboutHit, AnimatedSprite hit,
+        AnimatedSprite aboutKick, AnimatedSprite kick, AnimatedSprite defeated, AnimatedSprite idle,
         Vector2 position, Character player)
     {
         this.hp = hp;
-        this.type = type;
-        _walkSprite = walk;
-        _aboutToHitSprite = aboutToHit;
-        _hittingSprite = hitting;
-        _aboutToKickSprite = aboutToKick;
-        _kickingSprite = kicking;
-        _defeatedSprite = defeated;
+        this.walk = walk;
+        this.aboutHit = aboutHit;
+        this.hit = hit;
+        this.aboutKick = aboutKick;
+        this.kick = kick;
+        this.defeated = defeated;
+        this.idle = idle;
         this.position = position;
-        this._player = player;
-
-        speed = 100f;
-        velocity = Vector2.Zero;
-        currentState = "walk";
-        stateTimer = 0f;
+        this.player = player;
 
         UpdateCurrentSprite();
     }
 
-    // Switch to the correct animation for the current state
+    // choose sprite based on current state
     private void UpdateCurrentSprite()
     {
-        _currentSprite = currentState switch
+        current = state switch
         {
-            "walk" => _walkSprite,
-            "hit" => _aboutToHitSprite,
-            "about_to_hit" => _aboutToHitSprite,
-            "hitting" => _hittingSprite,
-            "about_to_kick" => _aboutToKickSprite,
-            "kicking" => _kickingSprite,
-            "defeated" => _defeatedSprite,
-            _ => _walkSprite
+            EnemyState.Walk        => walk,
+            EnemyState.AboutToHit  => aboutHit,
+            EnemyState.Hitting     => hit,
+            EnemyState.AboutToKick => aboutKick,
+            EnemyState.Kicking     => kick,
+            EnemyState.Idle        => idle,
+            EnemyState.Hit         => hit,
+            EnemyState.Defeated    => defeated,
+            _                      => walk
         };
     }
+
+    // quick helpers
+    private float PlayerDist() => (position.X + 64f) - player.Position.X;
+    private bool PlayerIsLeft() => PlayerDist() > 0f;
+    private bool PlayerIsRight() => PlayerDist() < 0f;
 
     public void Update(GameTime gameTime)
     {
-        float delta = (float)gameTime.ElapsedGameTime.TotalSeconds;
-        stateTimer += delta;
+        float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
+        stateTimer += dt;
 
-        // If dead, only update the defeated animation
-        if (hp <= 0)
-        {
-            currentState = "defeated";
-            UpdateCurrentSprite();
-            _currentSprite.Update(gameTime);
+        // if dead handle death animation
+        if (HandleDeath(gameTime))
             return;
-        }
 
-        float playerX = GetPlayerCenterX();
-        float tigerX = GetTigerCenterX();
+        float dist = PlayerDist();
 
-        // Enemy should always face the player
-        float attackOffset = 200f;
-        if (currentState == "walk" || currentState == "hit")
-            facingLeft = playerX < tigerX - attackOffset;
+        // stop player going behind tiger
+        PreventPlayerBehindTiger(dt);
 
-        // Decide whether to start an attack
-        if (currentState == "walk")
+        // main state machine
+        switch (state)
         {
-            bool facingPlayer =
-                (facingLeft && playerX < tigerX) ||
-                (!facingLeft && playerX > tigerX);
+            case EnemyState.Walk:
+                UpdateWalk(dt, dist);
+                break;
 
-            float dist = tigerX - playerX;
-            float attackRange = facingLeft ? 380f : -180f;
+            case EnemyState.AboutToHit:
+                UpdateWindUp(EnemyState.Hitting);
+                break;
 
-            bool inAttackRange = facingLeft
-                ? dist > 0 && dist <= attackRange
-                : dist < 0 && dist >= attackRange;
+            case EnemyState.AboutToKick:
+                UpdateWindUp(EnemyState.Kicking);
+                break;
 
-            if (facingPlayer && inAttackRange)
-            {
-                if (stateTimer > 1.0f)
-                {
-                    stateTimer = 0f;
-                    currentState = Random.Shared.Next(2) == 0
-                        ? "about_to_hit"
-                        : "about_to_kick";
-                }
-            }
+            case EnemyState.Hitting:
+            case EnemyState.Kicking:
+                UpdateAttackEnd();
+                break;
+
+            case EnemyState.Idle:
+                UpdateIdle();
+                break;
+
+            case EnemyState.Hit:
+                UpdateHitReaction();
+                break;
         }
-
-        // Wind-up transitions
-        if (currentState == "about_to_hit" && stateTimer > 0.3f)
-        {
-            currentState = "hitting";
-            Attack();
-        }
-
-        if (currentState == "about_to_kick" && stateTimer > 0.3f)
-        {
-            currentState = "kicking";
-            Attack();
-        }
-
-        // End attack animation
-        if ((currentState == "hitting" || currentState == "kicking") && stateTimer > 0.7f)
-        {
-            currentState = "walk";
-        }
-
-        // Move towards player when walking
-        if (currentState == "walk")
-        {
-            float dist = tigerX - playerX;
-            float stopDistance = facingLeft ? 380f : -50f;
-
-            if (!facingLeft)
-            {
-                if (dist < -stopDistance)
-                    position.X += speed * delta;
-            }
-            else
-            {
-                if (dist > stopDistance)
-                    position.X -= speed * delta;
-            }
-        }
-
-        // Recover from hit animation
-        if (currentState == "hit" && stateTimer > 0.4f)
-            currentState = "walk";
 
         UpdateCurrentSprite();
-        _currentSprite.Update(gameTime);
+        current.Update(gameTime);
     }
 
-    public void Draw(SpriteBatch spriteBatch)
+    // death behavior
+    private bool HandleDeath(GameTime gameTime)
     {
-        if (IsDead && currentState != "defeated")
-            return;
+        if (hp > 0)
+            return false;
 
-        _currentSprite.Effects = facingLeft ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
+        hp = 0;
 
-        float originX = _currentSprite.Width / 2f;
-        float originY = 62f;
-
-        _currentSprite.Origin = new Vector2(originX, originY);
-        _currentSprite.Scale = new Vector2(2f, 2f);
-
-        float visualOffsetY = GetAnimationOffsetY() * _currentSprite.Scale.Y;
-        float flipCorrection = GetFlipOffsetX() * _currentSprite.Scale.X;
-
-        Vector2 drawPos = position + new Vector2(64 + flipCorrection, visualOffsetY);
-
-        _currentSprite.Draw(spriteBatch, drawPos);
-    }
-
-    private float GetAnimationOffsetY()
-    {
-        return currentState switch
+        if (state != EnemyState.Defeated)
         {
-            "walk" => 0f,
-            "about_to_hit" => 0f,
-            "hitting" => 0f,
-            "about_to_kick" => -20f,
-            "kicking" => -20f,
-            "defeated" => 0f,
-            "hit" => -5f,
-            _ => 0f
-        };
+            state = EnemyState.Defeated;
+            stateTimer = 0f;
+        }
+
+        if (stateTimer > 1f)
+            hp = -999; // remove enemy
+
+        UpdateCurrentSprite();
+        current.Update(gameTime);
+        return true;
     }
 
-    // Fixes horizontal shift when flipping the sprite
-    private float GetFlipOffsetX() => facingLeft ? -15f : 15f;
+    // block player from going behind tiger
+    private void PreventPlayerBehindTiger(float dt)
+    {
+        if (PlayerIsRight())
+            position.X -= speed * dt;
+    }
+
+    // walking and approaching player
+    private void UpdateWalk(float dt, float dist)
+    {
+        if (PlayerIsLeft() && dist > StopDistance)
+            position.X -= speed * dt;
+
+        if (stateTimer > 1f && InAttackRange(dist))
+        {
+            stateTimer = 0f;
+
+            state = Random.Shared.Next(2) == 0
+                ? EnemyState.AboutToHit
+                : EnemyState.AboutToKick;
+        }
+    }
+
+    private bool InAttackRange(float dist) =>
+        PlayerIsLeft() && dist <= AttackRange && dist > 0f;
+
+    // wind up before attacking
+    private void UpdateWindUp(EnemyState nextState)
+    {
+        if (stateTimer > 0.3f)
+        {
+            state = nextState;
+            stateTimer = 0f;
+            Attack();
+        }
+    }
+
+    // after attack play idle
+    private void UpdateAttackEnd()
+    {
+        if (stateTimer > 0.7f)
+        {
+            state = EnemyState.Idle;
+            stateTimer = 0f;
+        }
+    }
+
+    // idle pause
+    private void UpdateIdle()
+    {
+        if (stateTimer > 1.5f)
+        {
+            state = EnemyState.Walk;
+            stateTimer = 0f;
+        }
+    }
+
+    // when enemy takes a hit
+    private void UpdateHitReaction()
+    {
+        if (player.IsWalking() && stateTimer > 0.4f)
+        {
+            state = EnemyState.Walk;
+            stateTimer = 0f;
+        }
+    }
 
     public void Attack()
     {
-        _player.TakeDamage(10);
+        player.TakeDamage(10);
     }
-
-    private float GetTigerCenterX() => position.X + 64f;
-    private float GetPlayerCenterX() => _player.Position.X;
 
     public void TakeDamage(double damage)
     {
         hp -= damage;
 
-        if (hp > 0 && currentState != "hit")
+        if (hp > 0 && state != EnemyState.Hit)
         {
-            currentState = "hit";
+            state = EnemyState.Hit;
             stateTimer = 0f;
-            UpdateCurrentSprite();
         }
     }
+
+    public void Draw(SpriteBatch spriteBatch)
+    {
+        if (IsDead && state != EnemyState.Defeated)
+            return;
+
+        current.Effects = SpriteEffects.FlipHorizontally;
+
+        current.Origin = new Vector2(current.Width / 2f, 62f);
+        current.Scale = new Vector2(2f, 2f);
+
+        float offsetY = GetAnimationOffsetY() * current.Scale.Y;
+        
+        Vector2 drawPos = position + new Vector2(64, offsetY);
+
+        current.Draw(spriteBatch, drawPos);
+    }
+
+    private float GetAnimationOffsetY() =>
+        state switch
+        {
+            EnemyState.AboutToKick => -20f,
+            EnemyState.Kicking => -20f,
+            EnemyState.Hit => -5f,
+            _ => 0f
+        };
+
+    public Circle GetBounds() =>
+        new Circle(
+            (int)(position.X + 64f),
+            (int)(position.Y + 62f), // Same values as Vector2 drawPos = position + new Vector2(64, offsetY);
+            50
+        );
 }

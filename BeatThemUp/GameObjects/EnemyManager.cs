@@ -6,6 +6,8 @@ public class EnemyManager
 {
     private readonly List<Ennemie> _enemies = new List<Ennemie>();
     private readonly Character _player;
+    public Ennemie FirstEnemy => _enemies.Count > 0 ? _enemies[0] : null;
+
     
     public EnemyManager(Character player)
     {
