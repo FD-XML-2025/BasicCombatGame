@@ -144,7 +144,7 @@ public class GameScene : Scene
         AnimatedSprite tigerWalkBack  = tigerAtlas.CreateAnimatedSprite("tiger_walk_back");
         
         var tiger = new Ennemie(
-            100f, "Tiger",
+            100f,
             tigerWalk, // walk
             tigerPunch, // aboutToPunch
             tigerPunch, //  punch
