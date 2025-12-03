@@ -100,7 +100,6 @@ public class Ennemie
     // helpers
     private float PlayerDist() => (position.X + 64f) - player.Position.X;
     private bool PlayerIsLeft() => PlayerDist() > 0f;
-    private bool PlayerIsRight() => PlayerDist() < 0f;
 
     public void Update(GameTime gameTime)
     {
@@ -112,9 +111,6 @@ public class Ennemie
             return;
 
         float dist = PlayerDist();
-
-        // stop player going behind tiger
-        PreventPlayerBehindTiger(dt);
 
         // main state machine
         switch (state)
@@ -172,13 +168,6 @@ public class Ennemie
         UpdateCurrentSprite();
         current.Update(gameTime);
         return true;
-    }
-
-    // block player from going behind tiger
-    private void PreventPlayerBehindTiger(float dt)
-    {
-        if (PlayerIsRight())
-            position.X -= speed * dt;
     }
 
     // walking and approaching player
