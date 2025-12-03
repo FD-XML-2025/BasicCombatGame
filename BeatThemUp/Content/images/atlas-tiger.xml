@@ -19,10 +19,10 @@
         <!-- ROW 2: Walk loop (8 frames) -->
         <Region name="tiger_walk_1" x="34"  y="252" width="68" height="74"/>
         <Region name="tiger_walk_2" x="164" y="253" width="66" height="73"/>
-        <Region name="tiger_walk_3" x="292" y="251" width="65" height="75"/>
-        <Region name="tiger_walk_4" x="420" y="249" width="64" height="77"/>
-        <Region name="tiger_walk_5" x="546" y="247" width="67" height="79"/>
-        <Region name="tiger_walk_6" x="670" y="245" width="72" height="81"/>
+        <Region name="tiger_walk_6" x="292" y="251" width="65" height="75"/>
+        <Region name="tiger_walk_5" x="420" y="249" width="64" height="77"/>
+        <Region name="tiger_walk_4" x="546" y="247" width="67" height="79"/>
+        <Region name="tiger_walk_3" x="670" y="245" width="72" height="81"/>
         <Region name="tiger_walk_7" x="798" y="245" width="72" height="80"/>
         <Region name="tiger_walk_8" x="930" y="244" width="68" height="81"/>
 
@@ -39,14 +39,14 @@
 
     <Animations>
         <!-- Idle -->
-        <Animation name="tiger_idle" delay="75">
+        <!--<Animation name="tiger_idle" delay="75">
             <Frame region="tiger_walk_1"/>
             <Frame region="tiger_walk_2"/>
             <Frame region="tiger_walk_3"/>
             <Frame region="tiger_walk_4"/>
             <Frame region="tiger_walk_5"/>
             <Frame region="tiger_walk_6"/>
-        </Animation>
+        </Animation>-->
         
         <!-- Walk loop -->
         <Animation name="tiger_walk" delay="90">
@@ -78,7 +78,7 @@
             <Frame region="tiger_defeated"/>
         </Animation>
 
-        <!-- Optional: hit reaction -->
+        <!-- hit reaction -->
         <Animation name="tiger_hit" delay="120">
             <Frame region="tiger_hit_recoil"/>
         </Animation>

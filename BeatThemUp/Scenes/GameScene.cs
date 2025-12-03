@@ -49,6 +49,9 @@ public class GameScene : Scene
 
     // The level duration in seconds
     private const float LEVEL_DURATION = 5 * 60f;
+    
+    private Texture2D _backgroundTexture;
+    private Rectangle _backgroundRect;
 
     public override void Initialize()
     {
@@ -129,14 +132,15 @@ public class GameScene : Scene
         
         // Tiger atlas (NEW)
         TextureAtlas tigerAtlas = TextureAtlas.FromFile(Core.Content, "images/atlas-tiger.xml");
-        TextureAtlas atlas = TextureAtlas.FromFile(Core.Content, "images/atlas-definition.xml");
+        TextureAtlas tigerIdleAtlas = TextureAtlas.FromFile(Core.Content, "images/atlas-tiger-idle.xml");
+        
         
         // Tiger animations
         AnimatedSprite tigerWalk  = tigerAtlas.CreateAnimatedSprite("tiger_walk");
         AnimatedSprite tigerPunch = tigerAtlas.CreateAnimatedSprite("tiger_punch");
         AnimatedSprite tigerKick  = tigerAtlas.CreateAnimatedSprite("tiger_kick");
         AnimatedSprite tigerDefeated = tigerAtlas.CreateAnimatedSprite("tiger_defeated"); // reuse hit
-        AnimatedSprite tigerIdle = tigerAtlas.CreateAnimatedSprite("tiger_idle");
+        AnimatedSprite tigerIdle = tigerIdleAtlas.CreateAnimatedSprite("tiger_idle");
 
         var tiger = new Ennemie(
             100f, "Tiger",
@@ -158,6 +162,9 @@ public class GameScene : Scene
         // Create the texture atlas from the XML configuration file
         TextureAtlas atlas = TextureAtlas.FromFile(Core.Content, "images/atlas-definition.xml");
         
+        _backgroundTexture = Content.Load<Texture2D>("images/BackgroundImage");
+        _backgroundRect = Core.GraphicsDevice.PresentationParameters.Bounds;
+
         TextureAtlas charactersAtlas = TextureAtlas.FromFile(Core.Content, "images/atlas-definition-characters.xml");
 
         // Create the animated sprite for the player from the atlas.
@@ -334,7 +341,7 @@ public class GameScene : Scene
             // Otherwise, just begin the sprite batch as normal.
             Core.SpriteBatch.Begin(samplerState: SamplerState.PointClamp);
         }
-
+        Core.SpriteBatch.Draw(_backgroundTexture, _backgroundRect, Color.White);
         // Draw the player.
         _player.Draw();
         

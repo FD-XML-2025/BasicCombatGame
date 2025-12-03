@@ -160,18 +160,6 @@
 /processorParam:TextureFormat=Color
 /build:images/logo.png
 
-#begin images/RCG2_Selfie_01.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:images/RCG2_Selfie_01.png
-
 #begin images/spritesheet.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -196,8 +184,35 @@
 /processorParam:TextureFormat=Color
 /build:images/spritesheet(1).png
 
+#begin images/spritesheet(2).png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:images/spritesheet(2).png
+
+#begin images/BackgroundImage.jpg
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:images/BackgroundImage.jpg
+
 #begin images/atlas-tiger.xml
 /copy:images/atlas-tiger.xml
+
+#begin image/atlas-tiger-idle.xml
+/copy:images/atlas-tiger-idle.xml
 
 #begin images/tilemap-definition.xml
 /copy:images/tilemap-definition.xml
