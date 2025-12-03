@@ -18,7 +18,7 @@ public class Game1 : Core
     // The background theme song
     private Song _themeSong;
     
-    private SpriteBatch spriteBatch;
+    private SpriteBatch _spriteBatch;
 
     public Game1() : base("Yakuza's Revenge", 1280, 720, false)
     {
@@ -29,7 +29,7 @@ public class Game1 : Core
     {
         base.Initialize();
         
-        spriteBatch = new SpriteBatch(GraphicsDevice);
+        _spriteBatch = new SpriteBatch(GraphicsDevice);
         
         // Start the game with the title scene.
         ChangeScene(new TitleScene());
@@ -114,16 +114,8 @@ public class Game1 : Core
     protected override void LoadContent()
     {
     }
-
-    protected override void Update(GameTime gameTime)
-    {
-        base.Update(gameTime);
-    }
-
     protected override void Draw(GameTime gameTime)
     {
-        
-        
         base.Draw(gameTime);
         
         GumService.Default.Draw();
