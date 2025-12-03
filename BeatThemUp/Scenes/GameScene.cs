@@ -243,16 +243,6 @@ public class GameScene : Scene
             Console.WriteLine($"{enemy.GetType().Name} HP: {enemy.GetHp()}");
         }
 
-        for (int i = 0; i < _enemyManager.Enemies.Count; i++)
-        {
-            var enemy = _enemyManager.Enemies[i];
-
-            if (_player.IsAttacking && _player.GetBounds().Intersects(enemy.GetBounds()))
-            {
-                enemy.TakeDamage(_player.Damage);
-            }
-        }
-
         _timer.Update(gameTime);
         _ui.UpdateTimerText((int)_timer.GetRemainingTime());
 

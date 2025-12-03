@@ -11,14 +11,7 @@ public class Player : Character
     private AnimatedSprite _idleSprite;
     
     private AnimatedSprite _walkSprite;
-    
-    public bool IsAttacking { get; private set; }
-    
     public float Damage { get; private set; } = 10f;
-    
-    private float attackTimer = 0f;
-    
-    private const float attackDuration = 0.25f;
 
 
     public Player(AnimatedSprite sprite, AnimatedSprite walkSprite) : base(sprite)
@@ -90,16 +83,6 @@ public class Player : Character
             Attack();
         }
     }
-    public bool IsIdle()
-    {
-        return Velocity == Vector2.Zero;
-    }
-
-    public bool IsWalking()
-    {
-        return Velocity.Length() > 0;
-    }
-
     private void Attack()
     {
         
