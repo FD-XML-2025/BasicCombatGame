@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGameLibrary;
@@ -18,11 +19,12 @@ public class Ennemie
         Kicking,
         Idle,
         Hit,
-        Defeated
+        Defeated,
+        Retreat
     }
 
     // animations
-    private AnimatedSprite walk, aboutHit, hit, aboutKick, kick, defeated, idle;
+    private AnimatedSprite walk, aboutHit, hit, aboutKick, kick, defeated, walkBack, idle;
     private AnimatedSprite current;
 
     // movement and player reference
@@ -34,12 +36,18 @@ public class Ennemie
     private double hp;
     public double GetHp() => hp;
 
-    // state machine
+    // stateS
     private EnemyState state = EnemyState.Walk;
     private float stateTimer;
 
+    // attack
     private const float AttackRange = 300f;
     private const float StopDistance = 300f;
+    
+    // retreat
+    private bool retreating;
+    private float retreatDuration;
+    private float retreatSpeed = 150f; // faster backwards movement
 
     public bool IsDead => hp <= 0;
 
@@ -53,7 +61,7 @@ public class Ennemie
         float hp,
         string type,
         AnimatedSprite walk, AnimatedSprite aboutHit, AnimatedSprite hit,
-        AnimatedSprite aboutKick, AnimatedSprite kick, AnimatedSprite defeated, AnimatedSprite idle,
+        AnimatedSprite aboutKick, AnimatedSprite kick, AnimatedSprite defeated, AnimatedSprite walkBack, AnimatedSprite idle,
         Vector2 position, Character player)
     {
         this.hp = hp;
@@ -63,6 +71,7 @@ public class Ennemie
         this.aboutKick = aboutKick;
         this.kick = kick;
         this.defeated = defeated;
+        this.walkBack = walkBack;
         this.idle = idle;
         this.position = position;
         this.player = player;
@@ -83,11 +92,12 @@ public class Ennemie
             EnemyState.Idle        => idle,
             EnemyState.Hit         => hit,
             EnemyState.Defeated    => defeated,
+            EnemyState.Retreat     => walkBack,
             _                      => walk
         };
     }
 
-    // quick helpers
+    // helpers
     private float PlayerDist() => (position.X + 64f) - player.Position.X;
     private bool PlayerIsLeft() => PlayerDist() > 0f;
     private bool PlayerIsRight() => PlayerDist() < 0f;
@@ -132,6 +142,9 @@ public class Ennemie
 
             case EnemyState.Hit:
                 UpdateHitReaction();
+                break;
+            case EnemyState.Retreat:
+                UpdateRetreat(dt);
                 break;
         }
 
@@ -213,9 +226,23 @@ public class Ennemie
     {
         if (stateTimer > 1.5f)
         {
+            if (Random.Shared.Next(4) == 0)
+            {
+                StartRetreat();
+                return;
+            }
+
             state = EnemyState.Walk;
             stateTimer = 0f;
         }
+    }
+    private void StartRetreat()
+    {
+        state = EnemyState.Retreat;
+        stateTimer = 0f;
+
+        // Random retreat duration between 0.5 and 1.2 seconds
+        retreatDuration = Random.Shared.NextSingle() * 0.7f + 0.5f;
     }
 
     // when enemy takes a hit
@@ -227,6 +254,20 @@ public class Ennemie
             stateTimer = 0f;
         }
     }
+    
+    private void UpdateRetreat(float dt)
+    {
+        // Move backwards to the right
+        position.X += retreatSpeed * dt;
+
+        if (stateTimer >= retreatDuration)
+        {
+            // After retreat, idle briefly
+            state = EnemyState.Idle;
+            stateTimer = 0f;
+        }
+    }
+
 
     public void Attack()
     {

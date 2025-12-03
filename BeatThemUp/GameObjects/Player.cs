@@ -43,13 +43,6 @@ public class Player : Character
         // Handle player inputs
         HandleInput();
         
-        if (IsAttacking)
-        {
-            attackTimer -= (float)gameTime.ElapsedGameTime.TotalSeconds;
-
-            if (attackTimer <= 0f)
-                EndAttack();
-        }
     }
 
     // Override OnSartMove event to set the walk sprite
@@ -109,24 +102,7 @@ public class Player : Character
 
     private void Attack()
     {
-        if (!IsAttacking)
-        {
-            StartAttack();
-            attackTimer = attackDuration; 
-            // switch sprite to an attack animation when animation found
-        }
-    }
-
-    public void StartAttack()
-    {
-        IsAttacking = true;
-        attackTimer = attackDuration;
-    }
-
-
-    public void EndAttack()
-    {
-        IsAttacking = false;
+        
     }
     
 }

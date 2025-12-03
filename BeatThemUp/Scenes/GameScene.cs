@@ -139,9 +139,10 @@ public class GameScene : Scene
         AnimatedSprite tigerWalk  = tigerAtlas.CreateAnimatedSprite("tiger_walk");
         AnimatedSprite tigerPunch = tigerAtlas.CreateAnimatedSprite("tiger_punch");
         AnimatedSprite tigerKick  = tigerAtlas.CreateAnimatedSprite("tiger_kick");
-        AnimatedSprite tigerDefeated = tigerAtlas.CreateAnimatedSprite("tiger_defeated"); // reuse hit
+        AnimatedSprite tigerDefeated = tigerAtlas.CreateAnimatedSprite("tiger_defeated");
         AnimatedSprite tigerIdle = tigerIdleAtlas.CreateAnimatedSprite("tiger_idle");
-
+        AnimatedSprite tigerWalkBack  = tigerAtlas.CreateAnimatedSprite("tiger_walk_back");
+        
         var tiger = new Ennemie(
             100f, "Tiger",
             tigerWalk, // walk
@@ -150,8 +151,9 @@ public class GameScene : Scene
             tigerKick, // aboutToKick 
             tigerKick, // kicking  
             tigerDefeated, // defeated
+            tigerWalkBack,
             tigerIdle,
-            new Vector2(600f, 550f),
+            new Vector2(1100f, 550f),
             _player
         );
         _enemyManager.AddEnemy(tiger);
@@ -225,7 +227,7 @@ public class GameScene : Scene
 
         if (tiger != null)
         {
-            float tigerFront = tiger.Position.X - 180f; // spacing for wall
+            float tigerFront = tiger.Position.X - 230f; // spacing for wall
 
             if (_player.Position.X > tigerFront)
             {

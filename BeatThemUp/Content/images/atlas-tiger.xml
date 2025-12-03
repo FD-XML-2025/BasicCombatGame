@@ -38,15 +38,17 @@
     </Regions>
 
     <Animations>
-        <!-- Idle -->
-        <!--<Animation name="tiger_idle" delay="75">
-            <Frame region="tiger_walk_1"/>
-            <Frame region="tiger_walk_2"/>
-            <Frame region="tiger_walk_3"/>
-            <Frame region="tiger_walk_4"/>
-            <Frame region="tiger_walk_5"/>
-            <Frame region="tiger_walk_6"/>
-        </Animation>-->
+        <!-- Walk Back -->
+        <Animation name="tiger_walk_back" delay="90">
+            <Frame region="tiger_walk_16"/>
+            <Frame region="tiger_walk_15"/>
+            <Frame region="tiger_walk_14"/>
+            <Frame region="tiger_walk_13"/>
+            <Frame region="tiger_walk_12"/>
+            <Frame region="tiger_walk_11"/>
+            <Frame region="tiger_walk_10"/>
+            <Frame region="tiger_walk_9"/>
+        </Animation>
         
         <!-- Walk loop -->
         <Animation name="tiger_walk" delay="90">
