@@ -118,6 +118,12 @@ public class GameScene : Scene
         // Initialize the player
         _player.Initialize(playerPos);
 
+        // Call game over when player die
+        _player.OnDeathEvent += GameOver;
+
+        // Update player healthbar when health change
+        _player.OnHealthChangeEvent += UpdatePlayerHealth;
+
         _enemyManager = new EnemyManager(_player);
         
         // Reset the score
@@ -157,6 +163,11 @@ public class GameScene : Scene
             _player
         );
         _enemyManager.AddEnemy(tiger);
+    }
+
+    private void UpdatePlayerHealth()
+    {
+        _ui.SetHealthBar(_player.Health / _player.MaxHealth);
     }
 
     public override void LoadContent()
@@ -235,9 +246,14 @@ public class GameScene : Scene
             }
         }
 
-        _timer.Update(gameTime);
-        _ui.UpdateTimerText((int)_timer.GetRemainingTime());
+        // Update timer and its HUD when running
+        if (_timer.IsRunning())
+        {
+            _timer.Update(gameTime);
+            _ui.UpdateTimerText((int)_timer.GetRemainingTime());   
+        }
 
+        // Game over if timer is finished
         if (_timer.IsFinished())
         {
             GameOver();

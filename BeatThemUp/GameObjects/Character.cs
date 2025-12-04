@@ -17,6 +17,12 @@ public class Character : Actor
     private bool _isParrying;
     
     private bool _wasMoving;
+    
+    // Event delegate when the character die
+    public event Action OnDeathEvent;
+    
+    // Event delegate when character health is updated
+    public event Action OnHealthChangeEvent;
 
     public AnimatedSprite Sprite { get; set; }
 
@@ -36,9 +42,15 @@ public class Character : Actor
         get => _health;
         set
         {
-            _health = float.Clamp(value, 0, MaxHealth);
-            if (_health <= 0)
-                OnDeath();
+            float newHealth = float.Clamp(value, 0, MaxHealth);
+            if (newHealth != _health)
+            {
+                _health = newHealth;
+                OnHealthChangeEvent?.Invoke();
+                // Call On Death methods if player must die :(
+                if (_health <= 0)
+                    OnDeath();
+            }
         }
     }
     
@@ -73,7 +85,7 @@ public class Character : Actor
 
     protected void OnDeath()
     {
-        
+        OnDeathEvent?.Invoke();
     }
 
     public bool IsParrying

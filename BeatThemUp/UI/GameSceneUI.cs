@@ -42,9 +42,13 @@ public class GameSceneUI : ContainerRuntime
     // The text runtime used to display the timer on the game screen.
     private TextRuntime _timerText;
 
+    private ColoredRectangleRuntime healthBarBorder;
+    
     private ColoredRectangleRuntime _healthBarBackground;
     
     private ColoredRectangleRuntime _healthBar;
+
+    private float HEALTH_BAR_WIDTH = 125f;
 
     /// <summary>
     /// Event invoked when the Resume button on the Pause panel is clicked.
@@ -101,29 +105,47 @@ public class GameSceneUI : ContainerRuntime
         AddChild(_gameOverPanel.Visual);
     }
 
+    public void SetHealthBar(float alpha)
+    {
+        _healthBar.Width = HEALTH_BAR_WIDTH * alpha;
+    }
+
     private void CreateHealthBar()
     {
+        healthBarBorder = new ColoredRectangleRuntime();
+        healthBarBorder.Anchor(Gum.Wireframe.Anchor.TopLeft);
+        healthBarBorder.WidthUnits = DimensionUnitType.RelativeToChildren;
+        healthBarBorder.HeightUnits = DimensionUnitType.RelativeToChildren;
+        healthBarBorder.Width = HEALTH_BAR_WIDTH;
+        healthBarBorder.Height = 12.5f;
+        healthBarBorder.X = 5.0f;
+        healthBarBorder.Y = 15.0f;
+        healthBarBorder.UseCustomFont = true;
+        healthBarBorder.CustomFontFile = "fonts/04b_30.fnt";
+        healthBarBorder.Color = new Color(255, 255, 255);
+        AddChild(healthBarBorder);
+
         _healthBarBackground = new ColoredRectangleRuntime();
         _healthBarBackground.Anchor(Gum.Wireframe.Anchor.TopLeft);
         _healthBarBackground.WidthUnits = DimensionUnitType.RelativeToChildren;
         _healthBarBackground.HeightUnits = DimensionUnitType.RelativeToChildren;
-        _healthBarBackground.Width = 100f;
-        _healthBarBackground.Height = 15f;
-        _healthBarBackground.X = 5.0f;
-        _healthBarBackground.Y = 5.0f;
+        _healthBarBackground.Width = HEALTH_BAR_WIDTH - 1;
+        _healthBarBackground.Height = 11.5f;
+        _healthBarBackground.X = 5.5f;
+        _healthBarBackground.Y = 15.5f;
         _healthBarBackground.UseCustomFont = true;
         _healthBarBackground.CustomFontFile = "fonts/04b_30.fnt";
         _healthBarBackground.Color = new Color(150, 0, 0);
         AddChild(_healthBarBackground);
-
+        
         _healthBar = new ColoredRectangleRuntime();
         _healthBar.Anchor(Gum.Wireframe.Anchor.TopLeft);
         _healthBar.WidthUnits = DimensionUnitType.RelativeToChildren;
         _healthBar.HeightUnits = DimensionUnitType.RelativeToChildren;
-        _healthBar.Width = 97.5f;
-        _healthBar.Height = 13f;
-        _healthBar.X = 6.5f;
-        _healthBar.Y = 6f;
+        _healthBar.Width = HEALTH_BAR_WIDTH - 1;
+        _healthBar.Height = 11.5f;
+        _healthBar.X = 5.5f;
+        _healthBar.Y = 15.5f;
         _healthBar.UseCustomFont = true;
         _healthBar.CustomFontFile = "fonts/04b_30.fnt";
         _healthBar.Color = new Color(255, 0, 0);
