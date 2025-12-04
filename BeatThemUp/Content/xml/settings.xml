@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <settings
-        xmlns='http://www.yakuzasrevenge/settings'
+        xmlns='http://www.yakuzasrevenge.fr/settings'
         xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
-        xsi:schemaLocation='http://www.yakuzasrevenge/settings settings.xsd'>
-
+        xsi:schemaLocation='http://www.yakuzasrevenge.fr/settings ../xsd/settings.xsd'>
     <volume>
         <general>1</general>
         <music>1</music>
@@ -13,5 +12,5 @@
     <windowMode>Windowed Borderless</windowMode>
     <screenResolution>16/9</screenResolution>
     <fps>-1</fps>
-    <quality>Epic</quality>
+    <quality>High</quality>
 </settings>

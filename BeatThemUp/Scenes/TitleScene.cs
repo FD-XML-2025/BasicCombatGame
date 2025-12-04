@@ -14,6 +14,7 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Xml.Serialization;
+using BeatThemUp.Utils;
 using ToolsUtilities;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
@@ -128,7 +129,7 @@ public class TitleScene : Scene
         _font5x = Content.Load<SpriteFont>("fonts/04B_30_5x");
 
         // Load the background pattern texture.
-        _backgroundPattern = Content.Load<Texture2D>("images/background-pattern");
+        _backgroundPattern = Content.Load<Texture2D>("images/BackgroundImage");
 
         // Load the sound effect to play when ui actions occur.
         _uiSoundEffect = Core.Content.Load<SoundEffect>("audio/ui");
@@ -136,8 +137,9 @@ public class TitleScene : Scene
         // Load the texture atlas from the xml configuration file.
         _atlas = TextureAtlas.FromFile(Core.Content, "images/atlas-definition.xml");
 
-        // Load the credits from the XML path
-        _credits = Content.Load<CreditData[]>("data/credits");
+        // Load the credits from the XML path 1 time
+        XMLManager<CreditData[]> xmlManager = new XMLManager<CreditData[]>();
+        //_credits = xmlManager.Load("Content/xml/credits.xml");
     }
 
     private void CreateTitlePanel()
@@ -386,11 +388,8 @@ public class TitleScene : Scene
         };
 
         // Save those settings to XML (settings.xml)
-        XmlSerializer serializer = new XmlSerializer(typeof(SettingsData));
-        using (StreamWriter writer = new StreamWriter("settings.xml"))
-        {
-            serializer.Serialize(writer, settings);
-        }
+        XMLManager<SettingsData> xmlManager = new XMLManager<SettingsData>();
+        xmlManager.Save("Content/xml/settings.xml", settings);
     }
 
     private void HandleCreditsButtonBack(object sender, EventArgs e)

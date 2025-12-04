@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 namespace GameDataTypes;
 
@@ -18,6 +19,8 @@ public enum Quality
     HIGH
 }
 
+[Serializable]
+[XmlRoot("settings", Namespace = "http://www.yakuzasrevenge.fr/settings")]
 public class SettingsData
 {
     public float MasterVolume;

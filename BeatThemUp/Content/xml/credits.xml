@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <credits
-        xmlns='http://www.yakuzasrevenge/credits'
+        xmlns='http://www.yakuzasrevenge.fr/credits'
         xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
-        xsi:schemaLocation='http://www.yakuzasrevenge/credits credits.xsd'>
-    
+        xsi:schemaLocation='http://www.yakuzasrevenge.fr/credits ../xsd/credits.xsd'>
     <credit>
         <name>Valentin Chene</name>
         <url>https://github.com/Sarbatore</url>

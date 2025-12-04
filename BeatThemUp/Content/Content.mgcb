@@ -80,21 +80,6 @@
 /processorParam:Quality=Best
 /build:audio/victory.wav
 
-#begin data/credits.xml
-/importer:XmlImporter
-/processor:PassThroughProcessor
-/build:data/credits.xml
-
-#begin data/save.xml
-/importer:XmlImporter
-/processor:PassThroughProcessor
-/build:data/save.xml
-
-#begin data/settings.xml
-/importer:XmlImporter
-/processor:PassThroughProcessor
-/build:data/settings.xml
-
 #begin effects/grayscaleEffect.fx
 /importer:EffectImporter
 /processor:EffectProcessor
@@ -124,6 +109,12 @@
 #begin images/atlas-definition.xml
 /copy:images/atlas-definition.xml
 
+#begin images/atlas-tiger-idle.xml
+/copy:images/atlas-tiger-idle.xml
+
+#begin images/atlas-tiger.xml
+/copy:images/atlas-tiger.xml
+
 #begin images/atlas.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -147,6 +138,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:images/background-pattern.png
+
+#begin images/BackgroundImage.jpg
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:images/BackgroundImage.jpg
 
 #begin images/logo.png
 /importer:TextureImporter
@@ -195,24 +198,6 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:images/spritesheet(2).png
-
-#begin images/BackgroundImage.jpg
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:images/BackgroundImage.jpg
-
-#begin images/atlas-tiger.xml
-/copy:images/atlas-tiger.xml
-
-#begin image/atlas-tiger-idle.xml
-/copy:images/atlas-tiger-idle.xml
 
 #begin images/tilemap-definition.xml
 /copy:images/tilemap-definition.xml

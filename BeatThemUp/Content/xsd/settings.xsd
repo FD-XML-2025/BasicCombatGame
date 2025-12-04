@@ -1,8 +1,8 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <schema version="1.0"
         xmlns="http://www.w3.org/2001/XMLSchema"
-        xmlns:yr="http://www.yakuzasrevenge/settings"
-        targetNamespace="http://www.yakuzasrevenge/settings"
+        xmlns:yr="http://www.yakuzasrevenge.fr/settings"
+        targetNamespace="http://www.yakuzasrevenge.fr/settings"
         elementFormDefault="qualified">
     
     <element name="settings" type="yr:Settings"/>

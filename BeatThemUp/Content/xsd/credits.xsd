@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <schema version="1.0"
         xmlns="http://www.w3.org/2001/XMLSchema"
-        xmlns:yr="http://www.yakuzasrevenge/credits"
-        targetNamespace="http://www.yakuzasrevenge/credits"
+        xmlns:yr="http://www.yakuzasrevenge.fr/credits"
+        targetNamespace="http://www.yakuzasrevenge.fr/credits"
         elementFormDefault="qualified">
 
     <element name="credits" type="yr:Credits"/>

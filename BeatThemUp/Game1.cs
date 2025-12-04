@@ -10,6 +10,7 @@ using MonoGameLibrary;
 using System;
 using System.IO;
 using System.Xml.Serialization;
+using BeatThemUp.Utils;
 
 namespace BeatThemUp;
 
@@ -50,28 +51,21 @@ public class Game1 : Core
     private void ApplySavedSettings()
     {
         SettingsData settings;
+        XMLManager<SettingsData> xmlManager = new XMLManager<SettingsData>();
 
         // Init settings file if it doesn't exist
-        if (!File.Exists("settings.xml"))
+        /*if (!File.Exists("settings.xml"))
         {
             settings = new SettingsData()
             {
                 MasterVolume = 1f,
                 MusicVolume = 1f
             };
-            using (TextWriter writer = new StreamWriter("settings.xml"))
-            {
-                var xml = new XmlSerializer(typeof(SettingsData));
-                xml.Serialize(writer, settings);
-            }
-        }
+            xmlManager.Save("settings.xml", settings);
+        }*/
 
         // Load settings from XML
-        using (TextReader reader = new StreamReader("settings.xml"))
-        {
-            var xml = new XmlSerializer(typeof(SettingsData));
-            settings = (SettingsData)xml.Deserialize(reader);
-        }
+        settings = xmlManager.Load("Content/xml/settings.xml");
 
         // Apply the loaded settings
         Core.Audio.SoundEffectVolume = settings.MasterVolume;
