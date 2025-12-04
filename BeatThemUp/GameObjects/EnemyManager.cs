@@ -6,8 +6,16 @@ public class EnemyManager
 {
     private readonly List<Ennemie> _enemies = new List<Ennemie>();
     private readonly Character _player;
-    public Ennemie FirstEnemy => _enemies.Count > 0 ? _enemies[0] : null;
-
+    public Ennemie? FirstEnemy
+    {
+        get
+        {
+            if (_enemies.Count > 0)
+                return _enemies[0];
+            else
+                return null;
+        }
+    }
     
     public EnemyManager(Character player)
     {
@@ -21,14 +29,21 @@ public class EnemyManager
 
     public void Update(GameTime gameTime)
     {
-        // Update all enemies
-        foreach (var enemy in _enemies)
+        // update all enemies
+        for (int i = 0; i < _enemies.Count; i++)
         {
-            enemy.Update(gameTime);   // uses logic from Ennemie.cs :contentReference[oaicite:0]{index=0}
+            _enemies[i].Update(gameTime);
+        }
+        
+        // remove defeated enemies
+        for (int i = _enemies.Count - 1; i >= 0; i--)
+        {
+            if (_enemies[i].IsDead)
+            {
+                _enemies.RemoveAt(i);
+            }
         }
 
-        // Remove defeated enemies
-        _enemies.RemoveAll(e => e.IsDead);
     }
 
     public void Draw(SpriteBatch spriteBatch)
@@ -39,5 +54,11 @@ public class EnemyManager
         }
     }
 
-    public IReadOnlyList<Ennemie> Enemies => _enemies;
+    public IReadOnlyList<Ennemie> Enemies
+    {
+        get
+        {
+            return _enemies;
+        }
+    }
 }

@@ -49,7 +49,10 @@ public class Ennemie
     private float retreatDuration;
     private float retreatSpeed = 150f; // faster backwards movement
 
-    public bool IsDead => hp <= 0;
+    public bool IsDead
+    {
+        get { return hp <= 0; }
+    }
 
     public Vector2 Position
     {
