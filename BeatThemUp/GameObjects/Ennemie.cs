@@ -305,6 +305,8 @@ public class Ennemie
         current.Draw(spriteBatch, drawPos);
     }
 
+    
+    // images aren't even so fixes that
     private float GetAnimationOffsetY()
     {
         return state switch

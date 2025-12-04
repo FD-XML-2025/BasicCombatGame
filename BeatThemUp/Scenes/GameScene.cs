@@ -235,13 +235,13 @@ public class GameScene : Scene
             }
         }
 
-        // Debugging for HP values to the console
+        /*// Debugging for HP values to the console
         Console.WriteLine($"Player HP: {_player.Health}");
 
         foreach (var enemy in _enemyManager.Enemies)
         {
             Console.WriteLine($"{enemy.GetType().Name} HP: {enemy.GetHp()}");
-        }
+        }*/
 
         _timer.Update(gameTime);
         _ui.UpdateTimerText((int)_timer.GetRemainingTime());
