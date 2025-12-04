@@ -4,8 +4,8 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 public class EnemyManager
 {
-    private readonly List<Ennemie> _enemies = new List<Ennemie>(); // just add or remove
-    private readonly Character _player;
+    private List<Ennemie> _enemies = new List<Ennemie>(); // just add or remove
+    private Character _player;
     public Ennemie? FirstEnemy
     {
         get
@@ -53,12 +53,5 @@ public class EnemyManager
             enemy.Draw(spriteBatch);
         }
     }
-
-    public IReadOnlyList<Ennemie> Enemies
-    {
-        get
-        {
-            return _enemies;
-        }
-    }
+    
 }

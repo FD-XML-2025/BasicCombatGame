@@ -34,9 +34,8 @@ public class Ennemie
 
     // health
     private double hp;
-    public double GetHp() => hp;
 
-    // stateS
+    // states
     private EnemyState state = EnemyState.Walk;
     private float stateTimer;
 
@@ -48,18 +47,19 @@ public class Ennemie
     private bool retreating;
     private float retreatDuration;
     private float retreatSpeed = 150f; // faster backwards movement
+    // is dead
+    public bool IsDead => hp <= 0;
 
-    public bool IsDead
-    {
-        get { return hp <= 0; }
-    }
-
+    // getter for hp
+    public double GetHp() => hp;
+    // x and y movement for enemy
     public Vector2 Position
     {
         get => position;
         set => position = value - new Vector2(current.Width / 2, current.Height / 2); // for centre of sprite
     }
 
+    // constructor
     public Ennemie(
         float hp,
         AnimatedSprite walk, AnimatedSprite aboutHit, AnimatedSprite hit, AnimatedSprite aboutKick, 
@@ -99,7 +99,7 @@ public class Ennemie
         };
     }
 
-    // helpers
+    // distance of player and enemy
     private float PlayerDist()
     {
         float enemyCenterX = position.X + 64f;
@@ -107,13 +107,13 @@ public class Ennemie
 
         return enemyCenterX - playerX;
     }
-
+    // checks player is left
     private bool PlayerIsLeft()
     {
         float distance = PlayerDist();
         return distance > 0f;
     }
-
+    // calls functions from enum states
     public void Update(GameTime gameTime)
     {
         float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
@@ -161,7 +161,7 @@ public class Ennemie
         current.Update(gameTime);
     }
 
-    // death behavior
+    // death behavior *****have to test when player attacks is implemented*****
     private bool HandleDeath(GameTime gameTime)
     {
         if (hp > 0)
@@ -174,9 +174,6 @@ public class Ennemie
             state = EnemyState.Defeated;
             stateTimer = 0f;
         }
-
-        if (stateTimer > 1f)
-            hp = -999; // remove enemy
 
         UpdateCurrentSprite();
         current.Update(gameTime);
@@ -256,7 +253,7 @@ public class Ennemie
 
         if (stateTimer >= retreatDuration)
         {
-            // After retreat, idle briefly
+            // After retreat idle briefly
             state = EnemyState.Idle;
             stateTimer = 0f;
         }
@@ -305,6 +302,8 @@ public class Ennemie
         current.Draw(spriteBatch, drawPos);
     }
 
+    
+    // images aren't even so fixes that
     private float GetAnimationOffsetY()
     {
         return state switch
