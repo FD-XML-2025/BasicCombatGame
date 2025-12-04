@@ -175,9 +175,6 @@ public class Ennemie
             stateTimer = 0f;
         }
 
-        if (stateTimer > 1f)
-            hp = -999; // remove enemy ****need to implement in enemy manager****
-
         UpdateCurrentSprite();
         current.Update(gameTime);
         return true;
