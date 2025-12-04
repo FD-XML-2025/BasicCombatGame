@@ -238,8 +238,9 @@ public class GameScene : Scene
         // Debugging for HP values to the console
         Console.WriteLine($"Player HP: {_player.Health}");
 
-        foreach (var enemy in _enemyManager.Enemies)
+        for (int i = 0; i < _enemyManager.Enemies.Count; i++)
         {
+            var enemy = _enemyManager.Enemies[i];
             Console.WriteLine($"{enemy.GetType().Name} HP: {enemy.GetHp()}");
         }
 

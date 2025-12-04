@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 public class EnemyManager
 {
-    private readonly List<Ennemie> _enemies = new List<Ennemie>();
+    private readonly List<Ennemie> _enemies = new List<Ennemie>(); // just add or remove
     private readonly Character _player;
     public Ennemie? FirstEnemy
     {
