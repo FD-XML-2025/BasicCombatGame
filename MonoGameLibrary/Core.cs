@@ -14,6 +14,11 @@ public class Core : Game
     internal static Core s_instance;
 
     /// <summary>
+    /// Used to exit game
+    /// </summary>
+    private static bool _exitRequested = false;
+
+    /// <summary>
     /// Gets a reference to the Core instance.
     /// </summary>
     public static Core Instance => s_instance;
@@ -131,6 +136,14 @@ public class Core : Game
         base.UnloadContent();
     }
 
+    /// <summary>
+    /// Request exit game
+    /// </summary>
+    public static void ExitGame()
+    {
+        _exitRequested = true;
+    }
+
     protected override void Update(GameTime gameTime)
     {
         // Update the input manager.
@@ -139,7 +152,7 @@ public class Core : Game
         // Update the audio controller.
         Audio.Update();
 
-        if (ExitOnEscape && Input.Keyboard.WasKeyJustPressed(Keys.Escape))
+        if (_exitRequested || (ExitOnEscape && Input.Keyboard.WasKeyJustPressed(Keys.Escape)))
         {
             Exit();
         }

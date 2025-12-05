@@ -78,7 +78,7 @@ public class Player : Character
         }
 
         // Make the player attack
-        if (GameController.Action())
+        if (GameController.Attack())
         {
             Attack();
         }

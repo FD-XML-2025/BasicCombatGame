@@ -14,6 +14,8 @@ public static class GameController
     private static KeyboardInfo s_keyboard => Core.Input.Keyboard;
     private static GamePadInfo s_gamePad => Core.Input.GamePads[(int)PlayerIndex.One];
     
+    private static MouseInfo s_mouse => Core.Input.Mouse;
+    
     /// <summary>
     /// Returns true if the player has triggered the "move backward" action.
     /// </summary>
@@ -43,6 +45,16 @@ public static class GameController
     {
         return s_keyboard.WasKeyJustPressed(Keys.Escape) ||
                s_gamePad.WasButtonJustPressed(Buttons.Start);
+    }
+
+    /// <summary>
+    /// Event when player want to attack
+    /// </summary>
+    /// <returns></returns>
+    public static bool Attack()
+    {
+        return s_mouse.WasButtonJustPressed(MouseButton.Left) ||
+               s_gamePad.WasButtonJustPressed(Buttons.X);
     }
 
     /// <summary>

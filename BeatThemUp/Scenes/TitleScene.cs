@@ -225,7 +225,7 @@ public class TitleScene : Scene
 
     private void HandleQuitClicked(object sender, EventArgs e)
     {
-        
+        Core.ExitGame();
     }
 
     private void CreateOptionsPanel()
