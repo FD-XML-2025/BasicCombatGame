@@ -13,7 +13,10 @@ using MonoGameLibrary.Scenes;
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Xml;
 using System.Xml.Serialization;
+using System.Xml.XPath;
+using System.Xml.Xsl;
 using BeatThemUp.Utils;
 using ToolsUtilities;
 using static System.Runtime.InteropServices.JavaScript.JSType;
@@ -66,7 +69,6 @@ public class TitleScene : Scene
     private SoundEffect _uiSoundEffect;
     private Panel _titleScreenButtonsPanel;
     private Panel _optionsPanel;
-    private Panel _creditsPanel;
 
     // The options button used to open the options menu.
     private AnimatedButton _optionsButton;
@@ -76,13 +78,9 @@ public class TitleScene : Scene
     // The back button used to exit the options menu back to the title menu.
     private AnimatedButton _optionsBackButton;
 
-    private AnimatedButton _creditsBackButton;
-
     // Reference to the texture atlas that we can pass to UI elements when they
     // are created.
     private TextureAtlas _atlas;
-
-    private CreditData[] _credits;
 
     private SettingsData[] _settings;
 
@@ -136,10 +134,6 @@ public class TitleScene : Scene
 
         // Load the texture atlas from the xml configuration file.
         _atlas = TextureAtlas.FromFile(Core.Content, "images/atlas-definition.xml");
-
-        // Load the credits from the XML path 1 time
-        XMLManager<CreditData[]> xmlManager = new XMLManager<CreditData[]>();
-        //_credits = xmlManager.Load("Content/xml/credits.xml");
     }
 
     private void CreateTitlePanel()
@@ -212,15 +206,23 @@ public class TitleScene : Scene
     {
         // A UI interaction occurred, play the sound effect
         Core.Audio.PlaySoundEffect(_uiSoundEffect);
-
-        // Set the title panel to be invisible.
-        _titleScreenButtonsPanel.IsVisible = false;
-
-        // Set the options panel to be visible.
-        _creditsPanel.IsVisible = true;
-
-        // Give the back button on the options panel focus.
-        _creditsBackButton.IsFocused = true;
+        
+        string htmlPath = @"Content/xslt/credits.html";
+        // Load the XML file
+        XPathDocument xPathDocument = new XPathDocument(@"Content/xml/credits.xml");
+        // Load the XSLT file
+        XslCompiledTransform xslCompiledTransform = new XslCompiledTransform();
+        xslCompiledTransform.Load(@"Content/xslt/credits.xsl");
+        // Transform the XML file into HTML through XSLT
+        XmlTextWriter xmlTextWriter = new XmlTextWriter(htmlPath, null);
+        xslCompiledTransform.Transform(xPathDocument, null, xmlTextWriter);
+        
+        // Open the HTML file in browser
+        Process.Start(new ProcessStartInfo
+        {
+            FileName = Path.GetFullPath(htmlPath), // Relative path was not working, using absolute one is working so I keep it
+            UseShellExecute = true // Needed to open the browser
+        });
     }
 
     private void HandleQuitClicked(object sender, EventArgs e)
@@ -280,48 +282,7 @@ public class TitleScene : Scene
         _optionsBackButton.Click += HandleOptionsButtonBack;
         _optionsPanel.AddChild(_optionsBackButton);
     }
-
-    private void CreateCreditsPanel()
-    {
-        _creditsPanel = new Panel();
-        _creditsPanel.Dock(Gum.Wireframe.Dock.Fill);
-        _creditsPanel.IsVisible = false;
-        _creditsPanel.AddToRoot();
-
-        TextRuntime optionsText = new TextRuntime();
-        optionsText.X = 10;
-        optionsText.Y = 10;
-        optionsText.Text = "CREDITS";
-        optionsText.UseCustomFont = true;
-        optionsText.FontScale = 0.5f;
-        optionsText.CustomFontFile = @"fonts/04b_30.fnt";
-        _creditsPanel.AddChild(optionsText);
-
-        if (_credits != null)
-        {
-            for (int i = 0; i < _credits.Length; i++)
-            {
-                var credit = _credits[i];
-
-                AnimatedButton nameButton = new AnimatedButton(_atlas);
-                nameButton.Text = credit.Name;
-                nameButton.Anchor(Gum.Wireframe.Anchor.Center);
-                nameButton.X = 0f;
-                nameButton.Y = i * 20f - 25f;
-                nameButton.Click += (s, e) => HandleCreditNameButtonClick(credit.Link);
-                _creditsPanel.AddChild(nameButton);
-            }
-        }
-
-        _creditsBackButton = new AnimatedButton(_atlas);
-        _creditsBackButton.Text = "BACK";
-        _creditsBackButton.Anchor(Gum.Wireframe.Anchor.BottomRight);
-        _creditsBackButton.X = -28f;
-        _creditsBackButton.Y = -10f;
-        _creditsBackButton.Click += HandleCreditsButtonBack;
-        _creditsPanel.AddChild(_creditsBackButton);
-    }
-
+    
     private void HandleSfxSliderChanged(object sender, EventArgs args)
     {
         // Intentionally not playing the UI sound effect here so that it is not
@@ -383,43 +344,14 @@ public class TitleScene : Scene
         // Save settings from the current Runtime settings
         var settings = new SettingsData()
         {
-            MusicVolume = Core.Audio.SongVolume,
-            MasterVolume = Core.Audio.SoundEffectVolume
+            Volume = new VolumeSettings() { General = Core.Audio.SoundEffectVolume, Music = Core.Audio.SongVolume}
         };
 
         // Save those settings to XML (settings.xml)
         XMLManager<SettingsData> xmlManager = new XMLManager<SettingsData>();
         xmlManager.Save("Content/xml/settings.xml", settings);
     }
-
-    private void HandleCreditsButtonBack(object sender, EventArgs e)
-    {
-        // A UI interaction occurred, play the sound effect
-        Core.Audio.PlaySoundEffect(_uiSoundEffect);
-
-        // Set the title panel to be visible.
-        _titleScreenButtonsPanel.IsVisible = true;
-
-        // Set the options panel to be invisible.
-        _creditsPanel.IsVisible = false;
-
-        // Give the options button on the title panel focus since we are coming
-        // back from the options screen.
-        _creditsButton.IsFocused = true;
-    }
-
-    private void HandleCreditNameButtonClick(string url)
-    {
-        if (!string.IsNullOrEmpty(url))
-        {
-            Process.Start(new ProcessStartInfo
-            {
-                FileName = url,
-                UseShellExecute = true // Needed to open the browser
-            });
-        }
-    }
-
+    
     private void InitializeUI()
     {
         // Clear out any previous UI in case we came here from
@@ -428,7 +360,6 @@ public class TitleScene : Scene
 
         CreateTitlePanel();
         CreateOptionsPanel();
-        CreateCreditsPanel();
     }
 
     public override void Update(GameTime gameTime)

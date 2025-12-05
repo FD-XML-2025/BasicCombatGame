@@ -4,19 +4,23 @@
         xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
         xsi:schemaLocation='http://www.yakuzasrevenge.fr/credits ../xsd/credits.xsd'>
     <credit>
-        <name>Valentin Chene</name>
-        <url>https://github.com/Sarbatore</url>
+        <name>Valentin Chêné</name>
+        <github>https://github.com/Sarbatore</github>
+        <linkedin>https://www.linkedin.com/in/valentinchene/</linkedin>
     </credit>
     <credit>
         <name>Adam Nedic</name>
-        <url>https://github.com/Anedi1</url>
+        <github>https://github.com/Anedi1</github>
+        <linkedin></linkedin>
     </credit>
     <credit>
         <name>Minh Huy Nguyen</name>
-        <url>https://github.com/minhhuy20916</url>
+        <github>https://github.com/minhhuy20916</github>
+        <linkedin></linkedin>
     </credit>
     <credit>
         <name>Nguyen Phuoc Loc Luu</name>
-        <url>https://github.com/luunpl</url>
+        <github>https://github.com/luunpl</github>
+        <linkedin></linkedin>
     </credit>
 </credits>

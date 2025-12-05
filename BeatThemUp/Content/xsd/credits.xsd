@@ -14,11 +14,12 @@
         </sequence>
     </complexType>
     
-    <!-- A credit is composed of a name and URL for the dev portfolio -->
+    <!-- A credit is composed of a name and dev github and linkedin -->
     <complexType name="Credit">
         <sequence>
             <element name="name" type="string"/>
-            <element name="url" type="anyURI"/>
+            <element name="github" type="anyURI"/>
+            <element name="linkedin" type="anyURI"/>
         </sequence>
     </complexType>
 </schema>

@@ -50,26 +50,13 @@ public class Game1 : Core
 
     private void ApplySavedSettings()
     {
-        SettingsData settings;
-        XMLManager<SettingsData> xmlManager = new XMLManager<SettingsData>();
-
-        // Init settings file if it doesn't exist
-        /*if (!File.Exists("settings.xml"))
-        {
-            settings = new SettingsData()
-            {
-                MasterVolume = 1f,
-                MusicVolume = 1f
-            };
-            xmlManager.Save("settings.xml", settings);
-        }*/
-
         // Load settings from XML
-        settings = xmlManager.Load("Content/xml/settings.xml");
+        XMLManager<SettingsData> xmlManager = new XMLManager<SettingsData>();
+        SettingsData settings = xmlManager.Load("Content/xml/settings.xml");
 
         // Apply the loaded settings
-        Core.Audio.SoundEffectVolume = settings.MasterVolume;
-        Core.Audio.SongVolume = settings.MusicVolume;
+        Core.Audio.SoundEffectVolume = settings.Volume.General;
+        Core.Audio.SongVolume = settings.Volume.Music;
     }
 
     private void InitializeGum()
