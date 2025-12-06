@@ -20,6 +20,8 @@ public class Game1 : Core
     private Song _themeSong;
     
     private SpriteBatch _spriteBatch;
+    
+    public static WindowMode WindowMode;
 
     public Game1() : base("Yakuza's Revenge", 1280, 720, false)
     {
@@ -57,6 +59,27 @@ public class Game1 : Core
         // Apply the loaded settings
         Core.Audio.SoundEffectVolume = settings.Volume.General;
         Core.Audio.SongVolume = settings.Volume.Music;
+        
+        SetWindowMode(settings.WindowMode);
+    }
+    
+    /// <summary>
+    /// This changes the window mode to either fullscreen or windowed.
+    /// </summary>
+    /// <param name="mode"></param>
+    public static void SetWindowMode(WindowMode mode)
+    {
+        switch (mode)
+        {
+            case WindowMode.Windowed :
+                Graphics.IsFullScreen = false;
+                break;
+            case WindowMode.Fullscreen :
+                Graphics.IsFullScreen = true;
+                break;
+        }
+        Graphics.ApplyChanges();
+        WindowMode = mode;
     }
 
     private void InitializeGum()

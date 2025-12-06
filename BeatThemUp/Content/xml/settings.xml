@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <settings>
     <volume>
-        <general>1</general>
-        <music>1</music>
-        <sfx>1</sfx>
-        <ui>1</ui>
+        <general>0.25</general>
+        <music>0.25</music>
+        <sfx>0.25</sfx>
+        <ui>0.25</ui>
     </volume>
-    <windowMode>Windowed Borderless</windowMode>
+    <windowMode>Full Screen</windowMode>
     <screenResolution>16/9</screenResolution>
     <fps>-1</fps>
     <quality>High</quality>

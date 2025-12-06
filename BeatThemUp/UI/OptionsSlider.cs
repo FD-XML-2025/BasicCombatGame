@@ -37,7 +37,7 @@ public class OptionsSlider : Slider
     {
         // Create the top-level container for all visual elements
         ContainerRuntime topLevelContainer = new ContainerRuntime();
-        topLevelContainer.Height = 55f;
+        topLevelContainer.Height = 30f;
         topLevelContainer.Width = 264f;
 
         TextureRegion backgroundRegion = atlas.GetRegion("panel-background");
@@ -57,19 +57,19 @@ public class OptionsSlider : Slider
         _textInstance = new TextRuntime();
         _textInstance.CustomFontFile = @"fonts/04b_30.fnt";
         _textInstance.UseCustomFont = true;
-        _textInstance.FontScale = 0.5f;
+        _textInstance.FontScale = 0.25f;
         _textInstance.Text = "Replace Me";
         _textInstance.X = 10f;
-        _textInstance.Y = 10f;
+        _textInstance.Y = 5f;
         _textInstance.WidthUnits = DimensionUnitType.RelativeToChildren;
         topLevelContainer.AddChild(_textInstance);
 
         // Create the container for the slider track and decorative elements
         ContainerRuntime innerContainer = new ContainerRuntime();
-        innerContainer.Height = 13f;
+        innerContainer.Height = 7f;
         innerContainer.Width = 241f;
         innerContainer.X = 10f;
-        innerContainer.Y = 33f;
+        innerContainer.Y = 17.5f;
         topLevelContainer.AddChild(innerContainer);
 
         TextureRegion offBackgroundRegion = atlas.GetRegion("slider-off-background");
@@ -125,8 +125,8 @@ public class OptionsSlider : Slider
         ContainerRuntime trackInstance = new ContainerRuntime();
         trackInstance.Name = "TrackInstance";
         trackInstance.Dock(Gum.Wireframe.Dock.Fill);
-        trackInstance.Height = -2f;
-        trackInstance.Width = -2f;
+        trackInstance.Height = -1f;
+        trackInstance.Width = -1f;
         middleBackground.AddChild(trackInstance);
 
         // Create the fill rectangle that visually displays the current value
@@ -142,7 +142,7 @@ public class OptionsSlider : Slider
         offText.Green = 86;
         offText.Blue = 130;
         offText.CustomFontFile = @"fonts/04b_30.fnt";
-        offText.FontScale = 0.25f;
+        offText.FontScale = 0.15f;
         offText.UseCustomFont = true;
         offText.Text = "OFF";
         offText.Anchor(Gum.Wireframe.Anchor.Center);
@@ -154,7 +154,7 @@ public class OptionsSlider : Slider
         maxText.Green = 86;
         maxText.Blue = 130;
         maxText.CustomFontFile = @"fonts/04b_30.fnt";
-        maxText.FontScale = 0.25f;
+        maxText.FontScale = 0.15f;
         maxText.UseCustomFont = true;
         maxText.Text = "MAX";
         maxText.Anchor(Gum.Wireframe.Anchor.Center);

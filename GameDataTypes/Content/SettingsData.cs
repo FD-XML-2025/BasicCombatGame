@@ -32,7 +32,7 @@ public enum WindowMode
     [XmlEnum("Windowed")]
     Windowed,
 
-    [XmlEnum("Fullscreen")]
+    [XmlEnum("Full Screen")]
     Fullscreen,
 
     [XmlEnum("Windowed Borderless")]

@@ -4,6 +4,7 @@ using BeatThemUp.UI;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Media;
 using MonoGameGum;
 using MonoGameLibrary;
 using MonoGameLibrary.Graphics;
@@ -52,6 +53,8 @@ public class GameScene : Scene
     
     private Texture2D _backgroundTexture;
     private Rectangle _backgroundRect;
+    
+    private const string THEME_SONG = "audio/theme-01";
 
     public override void Initialize()
     {
@@ -75,6 +78,10 @@ public class GameScene : Scene
 
         // Initialize a new game to be played.
         InitializeNewGame();
+        
+        // Play theme song
+        Song themeSong = Content.Load<Song>(THEME_SONG);
+        Core.Audio.PlaySong(themeSong);
     }
 
     private void InitializeUI()
