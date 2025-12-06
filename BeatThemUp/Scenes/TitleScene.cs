@@ -264,7 +264,7 @@ public class TitleScene : Scene
         sfxSlider.Name = "SfxSlider";
         sfxSlider.Text = "SFX";
         sfxSlider.Anchor(Gum.Wireframe.Anchor.Top);
-        sfxSlider.Visual.Y = 93;
+        sfxSlider.Visual.Y = 70f;
         sfxSlider.Minimum = 0;
         sfxSlider.Maximum = 1;
         sfxSlider.Value = Core.Audio.SoundEffectVolume;
@@ -274,6 +274,15 @@ public class TitleScene : Scene
         sfxSlider.ValueChangeCompleted += HandleSfxSliderChangeCompleted;
         _optionsPanel.AddChild(sfxSlider);
 
+        Checkbox fullScreenCheckbox = new Checkbox(_atlas);
+        fullScreenCheckbox.Text = "Full Screen";
+        fullScreenCheckbox.Anchor(Gum.Wireframe.Anchor.Top);
+        fullScreenCheckbox.Visual.Y = 110f;
+        fullScreenCheckbox.IsChecked = Game1.WindowMode == WindowMode.Fullscreen;
+        fullScreenCheckbox.Checked += HandleFullScreenCheckboxChecked;
+        fullScreenCheckbox.Unchecked += HandleFullScreenCheckboxUnchecked;
+        _optionsPanel.AddChild(fullScreenCheckbox);
+
         _optionsBackButton = new AnimatedButton(_atlas);
         _optionsBackButton.Text = "BACK";
         _optionsBackButton.Anchor(Gum.Wireframe.Anchor.BottomRight);
@@ -281,6 +290,16 @@ public class TitleScene : Scene
         _optionsBackButton.Y = -10f;
         _optionsBackButton.Click += HandleOptionsButtonBack;
         _optionsPanel.AddChild(_optionsBackButton);
+    }
+
+    private void HandleFullScreenCheckboxChecked(object sender, EventArgs args)
+    {
+        Game1.SetWindowMode(WindowMode.Fullscreen);
+    }
+    
+    private void HandleFullScreenCheckboxUnchecked(object sender, EventArgs args)
+    {
+        Game1.SetWindowMode(WindowMode.Windowed);
     }
     
     private void HandleSfxSliderChanged(object sender, EventArgs args)
@@ -344,7 +363,8 @@ public class TitleScene : Scene
         // Save settings from the current Runtime settings
         var settings = new SettingsData()
         {
-            Volume = new VolumeSettings() { General = Core.Audio.SoundEffectVolume, Music = Core.Audio.SongVolume}
+            Volume = new VolumeSettings() { General = Core.Audio.SoundEffectVolume, Music = Core.Audio.SongVolume},
+            WindowMode = Game1.WindowMode
         };
 
         // Save those settings to XML (settings.xml)
