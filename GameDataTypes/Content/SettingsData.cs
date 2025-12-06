@@ -8,7 +8,7 @@ using System.Xml.Serialization;
 namespace GameDataTypes;
 
 [Serializable]
-[XmlRoot("settings", Namespace = "http://www.yakuzasrevenge.fr/settings")]
+[XmlRoot("settings")]
 public class SettingsData
 {
     [XmlElement("volume")]
