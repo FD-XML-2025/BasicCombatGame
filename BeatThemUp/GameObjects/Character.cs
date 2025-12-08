@@ -78,9 +78,10 @@ public class Character : Actor
     }
 
     // Character t
-    public void TakeDamage(float amount)
+    public virtual void TakeDamage(float amount)
     {
         Health -= amount;
+        Console.WriteLine($"[Character] Took {amount} damage. Health now {Health}");
     }
 
     protected void OnDeath()

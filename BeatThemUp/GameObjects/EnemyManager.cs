@@ -4,9 +4,9 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 public class EnemyManager
 {
-    private List<Ennemie> _enemies = new List<Ennemie>(); // just add or remove
+    private List<Enemy> _enemies = new List<Enemy>(); // just add or remove
     private Character _player;
-    public Ennemie? FirstEnemy
+    public Enemy? FirstEnemy
     {
         get
         {
@@ -22,7 +22,7 @@ public class EnemyManager
         _player = player;
     }
 
-    public void AddEnemy(Ennemie enemy)
+    public void AddEnemy(Enemy enemy)
     {
         _enemies.Add(enemy);
     }

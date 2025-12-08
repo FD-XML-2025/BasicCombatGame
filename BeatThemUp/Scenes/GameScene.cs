@@ -132,7 +132,8 @@ public class GameScene : Scene
         _player.OnHealthChangeEvent += UpdatePlayerHealth;
 
         _enemyManager = new EnemyManager(_player);
-        
+        _player.SetEnemyManager(_enemyManager);
+
         // Reset the score
         _score = 0;
 
@@ -149,27 +150,32 @@ public class GameScene : Scene
         
         
         // Tiger animations
-        AnimatedSprite tigerWalk  = tigerAtlas.CreateAnimatedSprite("tiger_walk");
-        AnimatedSprite tigerPunch = tigerAtlas.CreateAnimatedSprite("tiger_punch");
-        AnimatedSprite tigerKick  = tigerAtlas.CreateAnimatedSprite("tiger_kick");
-        AnimatedSprite tigerDefeated = tigerAtlas.CreateAnimatedSprite("tiger_defeated");
-        AnimatedSprite tigerIdle = tigerIdleAtlas.CreateAnimatedSprite("tiger_idle");
-        AnimatedSprite tigerWalkBack  = tigerAtlas.CreateAnimatedSprite("tiger_walk_back");
+        // Tiger animations
+        AnimatedSprite tigerWalk = tigerAtlas.CreateAnimatedSprite("tiger_walk");
+        AnimatedSprite tigerPunch = tigerAtlas.CreateAnimatedSprite("tiger_punch");       // punch
+        AnimatedSprite tigerKick = tigerAtlas.CreateAnimatedSprite("tiger_kick");        // kick
+        AnimatedSprite tigerHit = tigerAtlas.CreateAnimatedSprite("tiger_hit");         // << getting hit animation
+        AnimatedSprite tigerDefeated = tigerAtlas.CreateAnimatedSprite("tiger_defeated");    // dead
+        AnimatedSprite tigerIdle = tigerIdleAtlas.CreateAnimatedSprite("tiger_idle");    // idle
+        AnimatedSprite tigerWalkBack = tigerAtlas.CreateAnimatedSprite("tiger_walk_back");   // retreat
+
         
-        var tiger = new Ennemie(
+        var tiger = new Enemy(
             100f,
-            tigerWalk, // walk
-            tigerPunch, // aboutToPunch
-            tigerPunch, //  punch
-            tigerKick, // aboutToKick 
-            tigerKick, // kicking  
-            tigerDefeated, // defeated
+            tigerWalk,
+            tigerPunch,      // aboutToPunch
+            tigerPunch,      // punching
+            tigerKick,       // aboutToKick
+            tigerKick,       // kicking
+            tigerHit,        // getting hit animation
+            tigerDefeated,
             tigerWalkBack,
             tigerIdle,
             new Vector2(1100f, 550f),
             _player
         );
         _enemyManager.AddEnemy(tiger);
+
     }
 
     private void UpdatePlayerHealth()
@@ -186,13 +192,29 @@ public class GameScene : Scene
         _backgroundRect = Core.GraphicsDevice.PresentationParameters.Bounds;
 
         TextureAtlas charactersAtlas = TextureAtlas.FromFile(Core.Content, "images/atlas-definition-characters.xml");
-
+        TextureAtlas charactersAtlasAttack = TextureAtlas.FromFile(Core.Content, "images/atlas-definition-characters-attack.xml");
+        
         // Create the animated sprite for the player from the atlas.
         AnimatedSprite playerIdleAnimation = charactersAtlas.CreateAnimatedSprite("yakuza-male-idle");
         AnimatedSprite playerWalkAnimation = charactersAtlas.CreateAnimatedSprite("yakuza-male-walk");
-
+        
+        AnimatedSprite playerAttack1    = charactersAtlasAttack.CreateAnimatedSprite("yakuza-male-attack1");
+        AnimatedSprite playerAttack2    = charactersAtlasAttack.CreateAnimatedSprite("yakuza-male-attack2");
+        AnimatedSprite playerHit1       = charactersAtlasAttack.CreateAnimatedSprite("yakuza-male-hit1");
+        AnimatedSprite playerHit2       = charactersAtlasAttack.CreateAnimatedSprite("yakuza-male-hit2");
+        AnimatedSprite playerKnockdown  = charactersAtlasAttack.CreateAnimatedSprite("yakuza-male-knockdown");
+        
         // Create the player
-        _player = new Player(playerIdleAnimation, playerWalkAnimation);
+        _player = new Player(
+            playerIdleAnimation,     // idle
+            playerWalkAnimation,     // walk
+            playerAttack1,           // attack 1
+            playerAttack2,           // attack 2
+            playerHit1,              // hit reaction 1
+            playerHit2,              // hit reaction 2
+            playerKnockdown          // death/knockdown
+        );
+        _player.SetEnemyManager(_enemyManager);
 
         // Load the bounce sound effect for the bat
         SoundEffect bounceSoundEffect = Content.Load<SoundEffect>("audio/bounce");
@@ -236,7 +258,7 @@ public class GameScene : Scene
     
         // Update the player;
         _player.Update(gameTime);
-        
+
         // Update the timer
         _enemyManager.Update(gameTime);
         
@@ -272,8 +294,17 @@ public class GameScene : Scene
 
     private void CollisionChecks()
     {
+        var enemy = _enemyManager.FirstEnemy;
+        if (enemy == null)
+            return;
+
+        // 1D distance on X axis
+        float distance = Math.Abs(enemy.Position.X - _player.Position.X);
+        const float hitRange = 300f;
+        
+        
         // Capture the current bounds of the player
-        Circle playerBounds = _player.GetBounds();
+        //Circle playerBounds = _player.GetBounds();
 
         // First perform a collision check to see if the player is colliding with something
         /*if (slimeBounds.Intersects(batBounds))

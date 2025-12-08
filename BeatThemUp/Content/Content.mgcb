@@ -106,6 +106,9 @@
 #begin images/atlas-definition-characters.xml
 /copy:images/atlas-definition-characters.xml
 
+#begin images/atlas-definition-characters-attack.xml
+/copy:images/atlas-definition-characters-attack.xml
+
 #begin images/atlas-definition.xml
 /copy:images/atlas-definition.xml
 
@@ -174,6 +177,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:images/spritesheet.png
+
+#begin images/spritesheet_yakuza.png.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:images/spritesheet_yakuza.png
 
 #begin images/spritesheet(1).png
 /importer:TextureImporter

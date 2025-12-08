@@ -7,24 +7,25 @@ using MonoGameLibrary.Graphics;
 
 namespace BeatThemUp.GameObjects;
 
-public class Ennemie
+public class Enemy
 {
     // enemy states
     private enum EnemyState
     {
         Walk,
-        AboutToHit,
-        Hitting,
+        AboutToPunch,
+        Punching,
         AboutToKick,
         Kicking,
         Idle,
-        Hit,
+        GettingHit,
         Defeated,
         Retreat
     }
 
     // animations
-    private AnimatedSprite walk, aboutHit, hit, aboutKick, kick, defeated, walkBack, idle;
+    // animations
+    private AnimatedSprite walk, aboutToPunch, punching, aboutToKick, kicking, defeated, walkBack, idle, gettingHit;
     private AnimatedSprite current;
 
     // movement and player reference
@@ -60,18 +61,26 @@ public class Ennemie
     }
 
     // constructor
-    public Ennemie(
+    public Enemy(
         float hp,
-        AnimatedSprite walk, AnimatedSprite aboutHit, AnimatedSprite hit, AnimatedSprite aboutKick, 
-        AnimatedSprite kick, AnimatedSprite defeated, AnimatedSprite walkBack, AnimatedSprite idle,
+        AnimatedSprite walk,
+        AnimatedSprite aboutToPunch, AnimatedSprite punching,
+        AnimatedSprite aboutToKick, AnimatedSprite kicking,
+        AnimatedSprite gettingHit,
+        AnimatedSprite defeated, AnimatedSprite walkBack, AnimatedSprite idle,
         Vector2 position, Character player)
     {
         this.hp = hp;
         this.walk = walk;
-        this.aboutHit = aboutHit;
-        this.hit = hit;
-        this.aboutKick = aboutKick;
-        this.kick = kick;
+
+        this.aboutToPunch = aboutToPunch;
+        this.punching = punching;
+
+        this.aboutToKick = aboutToKick;
+        this.kicking = kicking;
+
+        this.gettingHit = gettingHit;   // Important
+
         this.defeated = defeated;
         this.walkBack = walkBack;
         this.idle = idle;
@@ -86,15 +95,15 @@ public class Ennemie
     {
         current = state switch
         {
-            EnemyState.Walk => walk,
-            EnemyState.AboutToHit => aboutHit,
-            EnemyState.Hitting => hit,
-            EnemyState.AboutToKick => aboutKick,
-            EnemyState.Kicking => kick,
-            EnemyState.Idle => idle,
-            EnemyState.Hit => hit,
-            EnemyState.Defeated => defeated,
-            EnemyState.Retreat => walkBack,
+            EnemyState.Walk        => walk,
+            EnemyState.AboutToPunch=> aboutToPunch,
+            EnemyState.Punching    => punching,
+            EnemyState.AboutToKick => aboutToKick,
+            EnemyState.Kicking     => kicking,
+            EnemyState.Idle        => idle,
+            EnemyState.GettingHit  => gettingHit,
+            EnemyState.Defeated    => defeated,
+            EnemyState.Retreat     => walkBack,
             _ => walk
         };
     }
@@ -132,15 +141,15 @@ public class Ennemie
                 UpdateWalk(dt, dist);
                 break;
 
-            case EnemyState.AboutToHit:
-                UpdateWindUp(EnemyState.Hitting);
+            case EnemyState.AboutToPunch:
+                UpdateWindUp(EnemyState.Punching);
                 break;
 
             case EnemyState.AboutToKick:
                 UpdateWindUp(EnemyState.Kicking);
                 break;
 
-            case EnemyState.Hitting:
+            case EnemyState.Punching:
             case EnemyState.Kicking:
                 UpdateAttackEnd();
                 break;
@@ -149,7 +158,7 @@ public class Ennemie
                 UpdateIdle();
                 break;
 
-            case EnemyState.Hit:
+            case EnemyState.GettingHit:
                 UpdateHitReaction();
                 break;
             case EnemyState.Retreat:
@@ -191,7 +200,7 @@ public class Ennemie
             stateTimer = 0f;
 
             state = Random.Shared.Next(2) == 0
-                ? EnemyState.AboutToHit
+                ? EnemyState.AboutToPunch
                 : EnemyState.AboutToKick;
         }
     }
@@ -262,28 +271,36 @@ public class Ennemie
     // when enemy takes a hit
     private void UpdateHitReaction()
     {
-        if (player.IsWalking() && stateTimer > 0.4f)
+        if (stateTimer > 0.4f)       // Always return to idle, not only when player walks
         {
-            state = EnemyState.Walk;
+            state = EnemyState.Idle;
             stateTimer = 0f;
         }
     }
     
     public void Attack()
     {
+        Console.WriteLine("[Enemy] ATTACK fired");
         player.TakeDamage(10);
     }
 
     public void TakeDamage(double damage)
     {
         hp -= damage;
+        Console.WriteLine($"[Enemy] Took {damage}. HP now {hp}");
 
-        if (hp > 0 && state != EnemyState.Hit)
+        if (hp <= 0)
         {
-            state = EnemyState.Hit;
+            state = EnemyState.Defeated;
             stateTimer = 0f;
+            return;
         }
+
+        state = EnemyState.GettingHit;
+        stateTimer = 0f;
+        current = gettingHit; // << play the animation here
     }
+
 
     public void Draw(SpriteBatch spriteBatch)
     {
@@ -309,10 +326,10 @@ public class Ennemie
         return state switch
         {
             EnemyState.AboutToKick => -20f,
-            EnemyState.Kicking     => -20f,
-            EnemyState.Hit         => -5f,
+            EnemyState.Kicking => -20f,
+            EnemyState.GettingHit => -5f,
             _                      => 0f
         };
     }
-
+    public bool IsAttacking() => state == EnemyState.Punching || state == EnemyState.Kicking;
 }
