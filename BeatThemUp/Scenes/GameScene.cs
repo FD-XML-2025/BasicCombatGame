@@ -1,6 +1,8 @@
 using System;
 using BeatThemUp.GameObjects;
 using BeatThemUp.UI;
+using BeatThemUp.Utils;
+using GameDataTypes;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
@@ -20,6 +22,12 @@ public class GameScene : Scene
         Paused,
         GameOver
     }
+
+    private int _kills;
+
+    private float _damageDealt;
+    
+    private float _damageTaken;
 
     // Game timer
     private Timer _timer;
@@ -119,14 +127,23 @@ public class GameScene : Scene
 
     private void InitializeNewGame()
     {
-        // Calculate the position for the player
+        // Reset the game stats
+        _kills = 0;
+        _damageTaken = 0;
+        _damageDealt = 0;
+        
+        // Default player position
         Vector2 playerPos = new Vector2(0, 400f);
         
         // Initialize the player
         _player.Initialize(playerPos);
+        _player.Heal(_player.MaxHealth);
 
+        // Update game stats when player take damage
+        _player.OnTakeDamageEvent += (damage) => _damageTaken += damage;
+        
         // Call game over when player die
-        _player.OnDeathEvent += GameOver;
+        _player.OnDeathEvent += () => GameEnd(true);
 
         // Update player healthbar when health change
         _player.OnHealthChangeEvent += UpdatePlayerHealth;
@@ -175,7 +192,6 @@ public class GameScene : Scene
             _player
         );
         _enemyManager.AddEnemy(tiger);
-
     }
 
     private void UpdatePlayerHealth()
@@ -285,7 +301,7 @@ public class GameScene : Scene
         // Game over if timer is finished
         if (_timer.IsFinished())
         {
-            GameOver();
+            GameEnd(true);
         }
 
         // Perform collision checks
@@ -301,7 +317,6 @@ public class GameScene : Scene
         // 1D distance on X axis
         float distance = Math.Abs(enemy.Position.X - _player.Position.X);
         const float hitRange = 300f;
-        
         
         // Capture the current bounds of the player
         //Circle playerBounds = _player.GetBounds();
@@ -347,6 +362,36 @@ public class GameScene : Scene
             // Set the grayscale effect saturation to 1.0f;
             _saturation = 1.0f;
         }
+    }
+
+    private void GameEnd(bool isGameOver)
+    {
+        if (isGameOver)
+            GameOver();
+        else
+            GameWon();
+
+        SaveGame(isGameOver);
+    }
+
+    private void SaveGame(bool isGameOver)
+    {
+        XMLManager<SaveData> xmlManager = new XMLManager<SaveData>();
+        SaveData save = xmlManager.Load("Content/xml/save.xml");
+        var newSave = new SaveData()
+        {
+            Kills = save.Kills + _kills,
+            Wins = save.Wins + (!isGameOver ? 1 : 0),
+            Loses = save.Loses + (isGameOver ? 1 : 0),
+            DamageDealt = save.DamageDealt + (int)_damageDealt,
+            DamageTaken = save.DamageTaken + (int)_damageTaken
+        };
+        xmlManager.Save("Content/xml/save.xml", newSave);
+    }
+
+    private void GameWon()
+    {
+        
     }
 
     private void GameOver()

@@ -18,6 +18,7 @@ using System.Xml.Serialization;
 using System.Xml.XPath;
 using System.Xml.Xsl;
 using BeatThemUp.Utils;
+using Microsoft.Xna.Framework.Media;
 using ToolsUtilities;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
@@ -83,6 +84,9 @@ public class TitleScene : Scene
     private TextureAtlas _atlas;
 
     private SettingsData[] _settings;
+    
+    // The background theme song
+    private Song _themeSong;
 
     public override void Initialize()
     {
@@ -115,6 +119,12 @@ public class TitleScene : Scene
         // screen background
         _backgroundDestination = Core.GraphicsDevice.PresentationParameters.Bounds;
 
+        // Load the background theme music
+        _themeSong = Content.Load<Song>("audio/theme-03");
+    
+        // Start playing the background music
+        Core.Audio.PlaySong(_themeSong);
+        
         InitializeUI();
     }
 

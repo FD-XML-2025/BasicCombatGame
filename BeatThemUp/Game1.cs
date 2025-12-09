@@ -16,9 +16,6 @@ namespace BeatThemUp;
 
 public class Game1 : Core
 {
-    // The background theme song
-    private Song _themeSong;
-    
     private SpriteBatch _spriteBatch;
     
     public static WindowMode WindowMode;
@@ -42,12 +39,6 @@ public class Game1 : Core
 
         // Apply saved settings
         ApplySavedSettings();
-
-        // Load the background theme music
-        _themeSong = Content.Load<Song>("audio/theme-03");
-    
-        // Start playing the background music
-        Audio.PlaySong(_themeSong);
     }
 
     private void ApplySavedSettings()

@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<schema version="1.0"
+        xmlns="http://www.w3.org/2001/XMLSchema"
+        xmlns:yr="http://www.yakuzasrevenge.fr/save"
+        targetNamespace="http://www.yakuzasrevenge.fr/save"
+        elementFormDefault="qualified">
+    
+    <element name="save" type="yr:Save"/>
+    
+    <complexType name="Save">
+        <sequence>
+            <element name="kills" type="nonNegativeInteger"/>
+            <element name="wins" type="nonNegativeInteger"/>
+            <element name="loses" type="nonNegativeInteger"/>
+            <element name="damageDealt" type="nonNegativeInteger"/>
+            <element name="damageTaken" type="nonNegativeInteger"/>
+        </sequence>
+    </complexType>
+</schema>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<save
+        xmlns='http://www.yakuzasrevenge.fr/save'
+        xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+        xsi:schemaLocation='http://www.yakuzasrevenge.fr/save ../xsd/save.xsd'>
+    <kills>0</kills>
+    <wins>0</wins>
+    <loses>0</loses>
+    <damageDealt>0</damageDealt>
+    <damageTaken>0</damageTaken>
+</save>

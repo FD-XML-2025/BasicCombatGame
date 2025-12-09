@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<settings>
+<settings
+        xmlns='http://www.yakuzasrevenge.fr/settings'
+        xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+        xsi:schemaLocation='http://www.yakuzasrevenge.fr/settings ../xsd/settings.xsd'>
     <volume>
         <general>0.25</general>
         <music>0.25</music>

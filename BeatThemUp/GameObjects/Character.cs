@@ -8,9 +8,9 @@ namespace BeatThemUp.GameObjects;
 public class Character : Actor
 {
     // The AnimatedSprite used when drawing each slime segment
-    private float _health = 100f;
+    private float _health = 10f;
     
-    private float _maxHealth = 100f;
+    private float _maxHealth = 10f;
 
     private Weapon _weapon;
 
@@ -23,6 +23,9 @@ public class Character : Actor
     
     // Event delegate when character health is updated
     public event Action OnHealthChangeEvent;
+
+    // Event delegate when character take damage
+    public event Action<float> OnTakeDamageEvent;
 
     public AnimatedSprite Sprite { get; set; }
 
@@ -80,6 +83,7 @@ public class Character : Actor
     // Character t
     public virtual void TakeDamage(float amount)
     {
+        OnTakeDamageEvent?.Invoke(amount);
         Health -= amount;
         Console.WriteLine($"[Character] Took {amount} damage. Health now {Health}");
     }
