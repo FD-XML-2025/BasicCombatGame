@@ -3,6 +3,9 @@ using System.Xml.Serialization;
 
 namespace GameDataTypes;
 
+/// <summary>
+/// Game save data serializable class (global save)
+/// </summary>
 [Serializable]
 [XmlRoot("save", Namespace = "http://www.yakuzasrevenge.fr/save")]
 public class SaveData

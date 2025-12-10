@@ -7,6 +7,9 @@ using System.Xml.Serialization;
 
 namespace GameDataTypes;
 
+/// <summary>
+/// Settings serializable class for saving whole settings
+/// </summary>
 [Serializable]
 [XmlRoot("settings", Namespace = "http://www.yakuzasrevenge.fr/settings")]
 public class SettingsData
@@ -27,6 +30,9 @@ public class SettingsData
     public Quality Quality;
 }
 
+/// <summary>
+/// Enum used for settings serialization, containing window desired mode
+/// </summary>
 public enum WindowMode
 {
     [XmlEnum("Windowed")]
@@ -39,6 +45,9 @@ public enum WindowMode
     WindowedBorderless
 }
 
+/// <summary>
+/// Enum only used for XML serialization
+/// </summary>
 public enum Quality
 {
     [XmlEnum("Low")]
@@ -49,6 +58,9 @@ public enum Quality
     High
 }
 
+/// <summary>
+/// Volume object for settings serialization, containing all volume settings
+/// </summary>
 public class VolumeSettings
 {
     [XmlElement("general")]

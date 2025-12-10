@@ -1,0 +1,205 @@
+@startuml
+
+package XMLSchema {
+    package credits {
+        class Credits {}
+        
+        class Credit {
+            +name: string
+            +github: anyURI
+            +linkedin: anyURI
+        }
+        
+        Credits "1" ... "0..*" Credit : contains
+    }
+    
+    package save {
+        class Save {
+            +kills: nonNegativeInteger
+            +wins : nonNegativeInteger
+            +loses : nonNegativeInteger
+            +damageDealt : nonNegativeInteger
+            +damageTaken : nonNegativeInteger
+        }
+    }
+        
+    package settings {
+        class Settings {}
+        
+        class Volume {
+            general : Multiplier
+            music : Multiplier
+            sfx : Multiplier
+            music : Multiplier
+        }
+        
+        class Multiplier {}
+        
+        class FPS {}
+        
+        enum WindowMode {
+            Full Screen,
+            Windowed,
+            Windowed Borderless;
+        }
+        
+        enum ScreenResolution {
+            16/9,
+            4/3;
+        }
+        
+        enum Quality {
+            Low,
+            Medium,
+            High;
+        }
+        
+        Settings "1" ... "1" Volume : +volume
+        Settings "1" ... "1" WindowMode : +windowMode
+        Settings "1" ... "1" ScreenResolution : +screenResolution
+        Settings "1" ... "1" FPS : +fps
+        Settings "1" ... "1" Quality : +quality
+        
+        Volume "1" ... "1" Multiplier : +general
+        Volume "1" ... "1" Multiplier : +music
+        Volume "1" ... "1" Multiplier : +sfx
+        Volume "1" ... "1" Multiplier : +music
+    }
+    
+    
+}
+
+package GameDataTypes {
+    class SaveData {
+        +Kills : int
+        +Wins : int
+        +Loses : int
+        +DamageDealt : int
+        +DamageTaken : int
+    }
+    
+    class SettingsData {
+        +Volume: VolumeSettings
+        +WindowMode : WindowMode
+        +ScreenResolution : ScreenResolution
+        +Fps : int
+        +Quality : Quality
+    }
+    
+    class VolumeSettings {
+        +General : float
+        +Music : float
+        +Sfx : float
+        +Ui : float
+    }
+    
+    enum WindowMode {
+        Windowed,
+        WindowedBorderless,
+        Fullscreen;
+    }
+    
+    enum ScreenResolution {
+        16/9,
+        4/3;
+    }
+    
+    enum Quality {
+        Low,
+        Medium,
+        High;
+    }
+    
+    SettingsData "1" ... "1" VolumeSettings : +Volume
+    SettingsData "1" ... "1" WindowMode : +WindowMode
+    SettingsData "1" ... "1" ScreenResolution : +ScreenResolution
+    SettingsData "1" ... "1" Quality : +Quality
+}
+
+package BeatThemUp {
+    class Actor {
+      -owner: Actor
+      -position: Vector2
+      -velocity: Vector2
+      -size: Vector2
+      +void SetPosition(Vector2 position)
+      +void SetVelocity(Vector2 velocity)
+      +void SetSize(Vector2 size)
+    }
+    
+    class Character extends Actor {
+      -sprite: AnimatedSprite
+      -health: float
+      -maxHealth: float
+      -weapon: Weapon
+      -isParrying: boolean
+      -damageMultiplier: float
+      +Character(AnimatedSprite sprite, float health)
+      +Character(AnimatedSprite sprite, float health, Weapon weapon)
+      +float getHealth()
+      +void SetHealth(float health)
+      +float getMaxHealth()
+      +void SetMaxHealth(float max)
+      +void TakeDamage(float damage)
+      +void Kill()
+      +void OnDeath()
+      +void Heal(float points)
+      +Weapon getWeapon()
+      +void SetWeapon(Weapon weapon)
+      +boolean isParrying()
+      +void SetIsParrying(boolean isParrying)
+      +float damageMultiplier()
+      +void setDamageMultiplier()
+    }
+    
+    class Player extends Character {
+      +void Move()
+      +void Attack()
+    }
+    
+    class Enemy extends Character {
+      +void MoveToPlayer()
+      +void AttackPlayer()
+    }
+    
+    class Pickable extends Actor {
+      +autoPickup: boolean
+      +void Pickup()
+    }
+    
+    class PickableWeapon extends Pickable {
+      -weapon: Weapon
+      +PickableHealth()
+    }
+    
+    class PickableHealth extends Pickable {
+      -health: float
+      +PickableHealth()
+    }
+    
+    class Weapon extends Actor {
+      -sprite: Sprite
+      -damage: float
+      -damageMultiplier: float
+      -fireRate: float
+      -fireRateMultiplier: float
+      +float GetDamage()
+      +float GetDamageMultiplier()
+      +void SetDamageMultiplier(float multiplier)
+      +float GetFireRate()
+      +float GetFireRateMultiplier()
+      +void SetFireRateMultiplier(float multiplier)
+    }
+    
+    class WeaponMelee extends Weapon {
+      +WeaponMelee()
+    }
+    
+    class WeaponBat extends Weapon {
+      +WeaponBat()
+    }
+    
+    Character "1" --- "1" Weapon
+}
+
+@enduml
