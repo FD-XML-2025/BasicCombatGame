@@ -20,7 +20,8 @@ public class GameScene : Scene
     {
         Playing,
         Paused,
-        GameOver
+        GameOver,
+        Win,
     }
 
     private int _kills;
@@ -105,6 +106,9 @@ public class GameScene : Scene
         _ui.ResumeButtonClick += OnResumeButtonClicked;
         _ui.RetryButtonClick += OnRetryButtonClicked;
         _ui.QuitButtonClick += OnQuitButtonClicked;
+        
+        _ui.WinRetryButtonClick += (s,e)=> InitializeNewGame();
+        _ui.WinQuitButtonClick  += (s,e)=> Core.ChangeScene(new TitleScene());
     }
 
     private void OnResumeButtonClicked(object sender, EventArgs args)
@@ -127,6 +131,9 @@ public class GameScene : Scene
 
     private void InitializeNewGame()
     {
+        _ui.HideWinPanel();
+        _ui.HideGameOverPanel();
+
         // Reset the game stats
         _kills = 0;
         _damageTaken = 0;
@@ -240,26 +247,32 @@ public class GameScene : Scene
 
         // Load the grayscale effect
         _grayscaleEffect = Content.Load<Effect>("effects/grayscaleEffect");
+        
+        TextureManager.Init(Core.GraphicsDevice);
     }
 
     public override void Update(GameTime gameTime)
     {
         // UI is always updated
         _ui.Update(gameTime);
+        
+        var enemy = _enemyManager.FirstEnemy;
+        if (enemy == null && _state == GameState.Playing)
+        {
+            GameEnd(false);
+        }
+
 
         if (_state != GameState.Playing)
         {
-            // The game is in either a paused or game over state, so
-            // gradually decrease the saturation to create the fading grayscale.
             _saturation = Math.Max(0.0f, _saturation - FADE_SPEED);
-
-            // If its just a game over state, return back
-            if (_state == GameState.GameOver)
-            {
-                return;
-            }
+            return; // only block gameplay when game over
         }
-
+        else if (_state == GameState.Win)
+        {
+            _saturation = Math.Max(0.0f, _saturation - FADE_SPEED);
+        }
+        
         // If the pause button is pressed, toggle the pause state
         if (GameController.Pause())
         {
@@ -391,7 +404,9 @@ public class GameScene : Scene
 
     private void GameWon()
     {
-        
+        _state = GameState.Win;
+        _ui.ShowWinPanel();
+        _saturation = 1.0f;
     }
 
     private void GameOver()

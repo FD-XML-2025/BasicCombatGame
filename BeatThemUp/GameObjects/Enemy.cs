@@ -35,6 +35,7 @@ public class Enemy
 
     // health
     private double hp;
+    private float maxHp;
 
     // states
     private EnemyState state = EnemyState.Walk;
@@ -48,6 +49,11 @@ public class Enemy
     private bool retreating;
     private float retreatDuration;
     private float retreatSpeed = 150f; // faster backwards movement
+    
+    // handle death
+    private float deathTimer = 0f;
+    public bool Remove { get; private set; } = false;
+    
     // is dead
     public bool IsDead => hp <= 0;
 
@@ -71,6 +77,7 @@ public class Enemy
         Vector2 position, Character player)
     {
         this.hp = hp;
+        maxHp = hp;
         this.walk = walk;
 
         this.aboutToPunch = aboutToPunch;
@@ -176,16 +183,22 @@ public class Enemy
         if (hp > 0)
             return false;
 
-        hp = 0;
-
-        if (state != EnemyState.Defeated) // so doesn't reset
+        if (state != EnemyState.Defeated)
         {
             state = EnemyState.Defeated;
             stateTimer = 0f;
+            deathTimer = 0f;
         }
 
-        UpdateCurrentSprite();
+        // Play defeated animation
+        current = defeated;
         current.Update(gameTime);
+
+        // Count time before removal
+        deathTimer += (float)gameTime.ElapsedGameTime.TotalSeconds;
+        if (deathTimer > 1.0f)  // <- adjust to how long you want it visible
+            Remove = true;
+
         return true;
     }
 
@@ -316,6 +329,29 @@ public class Enemy
 
         Vector2 drawPos = position + new Vector2(64, offsetY); // centre of 128px
 
+        // HP bar
+        if (!IsDead)
+        {
+            float healthPercent = (float)(hp / maxHp);
+
+            int barWidth = 80;
+            int barHeight = 10;
+
+            Vector2 barPos = new Vector2(position.X + 64 - barWidth / 2, position.Y - 40);
+
+            // background
+            spriteBatch.Draw(TextureManager.Pixel,
+                new Rectangle((int)barPos.X-80, (int)barPos.Y-130, barWidth, barHeight),
+                Color.DarkRed);
+
+            // foreground
+            spriteBatch.Draw(TextureManager.Pixel,
+                new Rectangle((int)barPos.X-80, (int)barPos.Y-130, (int)(barWidth * healthPercent), barHeight),
+                Color.LimeGreen);
+        }
+        
+        
+        
         current.Draw(spriteBatch, drawPos);
     }
 

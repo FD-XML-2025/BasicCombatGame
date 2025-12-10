@@ -38,10 +38,8 @@ public class EnemyManager
         // remove defeated enemies
         for (int i = _enemies.Count - 1; i >= 0; i--)
         {
-            if (_enemies[i].IsDead)
-            {
+            if (_enemies[i].Remove)
                 _enemies.RemoveAt(i);
-            }
         }
 
     }

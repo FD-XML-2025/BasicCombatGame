@@ -50,6 +50,11 @@ public class GameSceneUI : ContainerRuntime
 
     private float HEALTH_BAR_WIDTH = 125f;
 
+    // Win panel
+    private Panel _winPanel;
+    private AnimatedButton _winRetryButton;
+    private AnimatedButton _winQuitButton;
+    
     /// <summary>
     /// Event invoked when the Resume button on the Pause panel is clicked.
     /// </summary>
@@ -65,7 +70,10 @@ public class GameSceneUI : ContainerRuntime
     /// Event invoked when the Retry button on the Game Over panel is clicked.
     /// </summary>
     public event EventHandler RetryButtonClick;
-
+    
+    public event EventHandler WinRetryButtonClick;
+    public event EventHandler WinQuitButtonClick;
+    
     public GameSceneUI()
     {
         // The game scene UI inherits from ContainerRuntime, so we set its
@@ -103,6 +111,10 @@ public class GameSceneUI : ContainerRuntime
         // and add it as a child to this container
         _gameOverPanel = CreateGameOverPanel(atlas);
         AddChild(_gameOverPanel.Visual);
+        
+        // win panel
+        _winPanel = CreateWinPanel(atlas); 
+        AddChild(_winPanel.Visual);
     }
 
     public void SetHealthBar(float alpha)
@@ -295,6 +307,57 @@ public class GameSceneUI : ContainerRuntime
 
         return panel;
     }
+    
+    private Panel CreateWinPanel(TextureAtlas atlas)
+    {
+        Panel panel = new Panel();
+        panel.Anchor(Gum.Wireframe.Anchor.Center);
+        panel.Visual.WidthUnits = DimensionUnitType.Absolute;
+        panel.Visual.HeightUnits = DimensionUnitType.Absolute;
+        panel.Visual.Width = 264.0f;
+        panel.Visual.Height = 70.0f;
+        panel.IsVisible = false;
+
+        TextureRegion backgroundRegion = atlas.GetRegion("panel-background");
+
+        NineSliceRuntime background = new NineSliceRuntime();
+        background.Dock(Gum.Wireframe.Dock.Fill);
+        background.Texture = backgroundRegion.Texture;
+        background.TextureAddress = TextureAddress.Custom;
+        background.TextureHeight = backgroundRegion.Height;
+        background.TextureWidth = backgroundRegion.Width;
+        background.TextureTop = backgroundRegion.SourceRectangle.Top;
+        background.TextureLeft = backgroundRegion.SourceRectangle.Left;
+        panel.AddChild(background);
+
+        TextRuntime text = new TextRuntime();
+        text.Text = "YOU WIN!";
+        text.WidthUnits = DimensionUnitType.RelativeToChildren;
+        text.UseCustomFont = true;
+        text.CustomFontFile = "fonts/04b_30.fnt";
+        text.FontScale = 0.5f;
+        text.X = 10.0f;
+        text.Y = 10.0f;
+        panel.AddChild(text);
+
+        _winRetryButton = new AnimatedButton(atlas);
+        _winRetryButton.Text = "REPLAY";
+        _winRetryButton.Anchor(Gum.Wireframe.Anchor.BottomLeft);
+        _winRetryButton.Visual.X = 9.0f;
+        _winRetryButton.Visual.Y = -9.0f;
+        _winRetryButton.Click += (s,e)=> WinRetryButtonClick?.Invoke(s,e);
+        panel.AddChild(_winRetryButton);
+
+        _winQuitButton = new AnimatedButton(atlas);
+        _winQuitButton.Text = "QUIT";
+        _winQuitButton.Anchor(Gum.Wireframe.Anchor.BottomRight);
+        _winQuitButton.Visual.X = -9.0f;
+        _winQuitButton.Visual.Y = -9.0f;
+        _winQuitButton.Click += (s,e)=> WinQuitButtonClick?.Invoke(s,e);
+        panel.AddChild(_winQuitButton);
+
+        return panel;
+    }
 
     private void OnResumeButtonClicked(object sender, EventArgs args)
     {
@@ -405,6 +468,14 @@ public class GameSceneUI : ContainerRuntime
         _pausePanel.IsVisible = false;
     }
 
+    public void ShowWinPanel()
+    {
+        _winPanel.IsVisible = true;
+        _winRetryButton.IsFocused = true;
+        _pausePanel.IsVisible = false;
+        _gameOverPanel.IsVisible = false;
+    }
+    
     /// <summary>
     /// Tells the game scene ui to hide the game over panel.
     /// </summary>
@@ -413,6 +484,11 @@ public class GameSceneUI : ContainerRuntime
         _gameOverPanel.IsVisible = false;
     }
 
+    public void HideWinPanel()
+    {
+        _winPanel.IsVisible = false;
+    }
+    
     /// <summary>
     /// Updates the game scene ui.
     /// </summary>
