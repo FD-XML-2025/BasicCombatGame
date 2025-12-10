@@ -281,7 +281,7 @@ public class Enemy
     public void Attack()
     {
         Console.WriteLine("[Enemy] ATTACK fired");
-        player.TakeDamage(10);
+        player.TakeDamage(50);
     }
 
     public void TakeDamage(double damage)

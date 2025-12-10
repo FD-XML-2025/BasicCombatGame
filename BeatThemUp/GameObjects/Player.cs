@@ -56,8 +56,16 @@ public class Player : Character
 
     public void Initialize(Vector2 startingPosition)
     {
-        // Setup the player position
-        Position = startingPosition - new Vector2(_idleSprite.Width / 2, _idleSprite.Height / 2);
+        Sprite = _idleSprite;
+        
+        Position = startingPosition;
+
+        // Full state reset
+        _state = PlayerState.Idle;
+        _stateTimer = 0f;
+        _attackCooldown = 0f;
+        _hasDealtDamageThisAttack = false;
+        Velocity = Vector2.Zero;
     }
     
     public override void Update(GameTime gameTime)
@@ -235,5 +243,4 @@ public class Player : Character
     }
 
     public bool IsAlive() => _state != PlayerState.KnockedDown;
-
 }

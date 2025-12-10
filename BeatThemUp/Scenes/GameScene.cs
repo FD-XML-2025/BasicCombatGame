@@ -133,12 +133,12 @@ public class GameScene : Scene
         _damageDealt = 0;
         
         // Default player position
-        Vector2 playerPos = new Vector2(0, 400f);
+        Vector2 playerPos = new Vector2(0, 340f);
         
         // Initialize the player
         _player.Initialize(playerPos);
         _player.Heal(_player.MaxHealth);
-
+        
         // Update game stats when player take damage
         _player.OnTakeDamageEvent += (damage) => _damageTaken += damage;
         
