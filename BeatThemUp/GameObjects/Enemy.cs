@@ -341,12 +341,12 @@ public class Enemy
 
             // background
             spriteBatch.Draw(TextureManager.Pixel,
-                new Rectangle((int)barPos.X-80, (int)barPos.Y-130, barWidth, barHeight),
+                new Rectangle((int)barPos.X-70, (int)barPos.Y-130, barWidth, barHeight),
                 Color.DarkRed);
 
             // foreground
             spriteBatch.Draw(TextureManager.Pixel,
-                new Rectangle((int)barPos.X-80, (int)barPos.Y-130, (int)(barWidth * healthPercent), barHeight),
+                new Rectangle((int)barPos.X-70, (int)barPos.Y-130, (int)(barWidth * healthPercent), barHeight),
                 Color.LimeGreen);
         }
         
@@ -364,6 +364,7 @@ public class Enemy
             EnemyState.AboutToKick => -20f,
             EnemyState.Kicking => -20f,
             EnemyState.GettingHit => -5f,
+            EnemyState.Defeated => 25f,
             _                      => 0f
         };
     }
