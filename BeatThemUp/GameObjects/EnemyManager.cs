@@ -4,8 +4,8 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 public class EnemyManager // in case of future additional enemies
 {
-    private List<Enemy> _enemies = new List<Enemy>(); // just add or remove
-    private Character _player;
+    private List<Enemy> _enemies = new List<Enemy>();
+    private Character _player; // for access
     public Enemy? FirstEnemy // in case there are no enemies so game won't crash
     {
         get
