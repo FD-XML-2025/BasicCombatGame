@@ -21,7 +21,7 @@ public class GameScene : Scene
         Playing,
         Paused,
         GameOver,
-        Win,
+        Win
     }
 
     private int _kills;
@@ -60,6 +60,7 @@ public class GameScene : Scene
     // The level duration in seconds
     private const float LEVEL_DURATION = 5 * 60f;
     
+    // for drawing background
     private Texture2D _backgroundTexture;
     private Rectangle _backgroundRect;
     
@@ -107,6 +108,7 @@ public class GameScene : Scene
         _ui.RetryButtonClick += OnRetryButtonClicked;
         _ui.QuitButtonClick += OnQuitButtonClicked;
         
+        // when game is won buttons
         _ui.WinRetryButtonClick += (s,e)=> InitializeNewGame();
         _ui.WinQuitButtonClick  += (s,e)=> Core.ChangeScene(new TitleScene());
     }
@@ -131,6 +133,7 @@ public class GameScene : Scene
 
     private void InitializeNewGame()
     {
+        // panels not showing when game starts
         _ui.HideWinPanel();
         _ui.HideGameOverPanel();
 
@@ -155,6 +158,7 @@ public class GameScene : Scene
         // Update player healthbar when health change
         _player.OnHealthChangeEvent += UpdatePlayerHealth;
 
+        // link player and EnemyManager
         _enemyManager = new EnemyManager(_player);
         _player.SetEnemyManager(_enemyManager);
 
@@ -172,8 +176,6 @@ public class GameScene : Scene
         TextureAtlas tigerAtlas = TextureAtlas.FromFile(Core.Content, "images/atlas-tiger.xml");
         TextureAtlas tigerIdleAtlas = TextureAtlas.FromFile(Core.Content, "images/atlas-tiger-idle.xml");
         
-        
-        // Tiger animations
         // Tiger animations
         AnimatedSprite tigerWalk = tigerAtlas.CreateAnimatedSprite("tiger_walk");
         AnimatedSprite tigerPunch = tigerAtlas.CreateAnimatedSprite("tiger_punch");       // punch
@@ -182,7 +184,6 @@ public class GameScene : Scene
         AnimatedSprite tigerDefeated = tigerAtlas.CreateAnimatedSprite("tiger_defeated");    // dead
         AnimatedSprite tigerIdle = tigerIdleAtlas.CreateAnimatedSprite("tiger_idle");    // idle
         AnimatedSprite tigerWalkBack = tigerAtlas.CreateAnimatedSprite("tiger_walk_back");   // retreat
-
         
         var tiger = new Enemy(
             tigerWalk,
@@ -315,36 +316,6 @@ public class GameScene : Scene
         {
             GameEnd(true);
         }
-
-        // Perform collision checks
-        CollisionChecks();
-    }
-
-    private void CollisionChecks()
-    {
-        var enemy = _enemyManager.FirstEnemy;
-        if (enemy == null)
-            return;
-
-        // 1D distance on X axis
-        float distance = Math.Abs(enemy.Position.X - _player.Position.X);
-        const float hitRange = 300f;
-        
-        // Capture the current bounds of the player
-        //Circle playerBounds = _player.GetBounds();
-
-        // First perform a collision check to see if the player is colliding with something
-        /*if (slimeBounds.Intersects(batBounds))
-        {
-            // Increment the score.
-            _score += 100;
-
-            // Update the score display on the UI.
-            _ui.UpdateScoreText(_score);
-
-            // Play the collect sound effect
-            Core.Audio.PlaySoundEffect(_collectSoundEffect);
-        }*/
     }
 
     private void TogglePause()
@@ -442,7 +413,7 @@ public class GameScene : Scene
         // Draw the player.
         _player.Draw();
         
-        _enemyManager.Draw(Core.SpriteBatch);
+        _enemyManager.Draw();
 
         // Always end the sprite batch when finished.
         Core.SpriteBatch.End();

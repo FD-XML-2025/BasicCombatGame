@@ -2,11 +2,11 @@ namespace BeatThemUp.GameObjects;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-public class EnemyManager
+public class EnemyManager // in case of future additional enemies
 {
     private List<Enemy> _enemies = new List<Enemy>(); // just add or remove
     private Character _player;
-    public Enemy? FirstEnemy
+    public Enemy? FirstEnemy // in case there are no enemies so game won't crash
     {
         get
         {
@@ -35,7 +35,7 @@ public class EnemyManager
             _enemies[i].Update(gameTime);
         }
         
-        // remove defeated enemies
+        // iterate backwards since if removing forward indices move as well
         for (int i = _enemies.Count - 1; i >= 0; i--)
         {
             if (_enemies[i].Remove)
@@ -44,12 +44,11 @@ public class EnemyManager
 
     }
 
-    public void Draw(SpriteBatch spriteBatch)
+    public void Draw()
     {
         foreach (var enemy in _enemies)
         {
-            enemy.Draw();
+            enemy.Draw(); // draw enemies
         }
     }
-    
 }

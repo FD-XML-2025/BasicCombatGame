@@ -15,17 +15,18 @@ public class Player : Character
         KnockedDown
     }
     private PlayerState _state = PlayerState.Idle;
+    // times how long states last
     private float _stateTimer;
 
-    // Speed pixels/s
+    // speed
     private float _moveSpeed = 250f;
+    // prevents multiple damage
     private bool _hasDealtDamageThisAttack;
+    // prevents spamming attacks
     private float _attackCooldown;
-
+    
     private AnimatedSprite _idleSprite;
-    
     private AnimatedSprite _walkSprite;
-    
     private AnimatedSprite _attack1Sprite;
     private AnimatedSprite _attack2Sprite;
     private AnimatedSprite _hit1Sprite;
@@ -41,10 +42,9 @@ public class Player : Character
         AnimatedSprite attack2Sprite, AnimatedSprite hit1Sprite,
         AnimatedSprite hit2Sprite, AnimatedSprite knockdownSprite) : base(sprite)
     {
-        // Store the used sprites
+        // store the used sprites
         _idleSprite = sprite;
         _walkSprite = walkSprite;
-        
         _attack1Sprite = attack1Sprite;
         _attack2Sprite = attack2Sprite;
         _hit1Sprite = hit1Sprite;
@@ -60,7 +60,7 @@ public class Player : Character
         
         Position = startingPosition;
 
-        // Full state reset
+        // state reset
         _state = PlayerState.Idle;
         _stateTimer = 0f;
         _attackCooldown = 0f;
@@ -86,7 +86,7 @@ public class Player : Character
         base.Update(gameTime);
     }
 
-    // Override OnStartMove event to set the walk sprite
+    // Override OnStartMove from Character to set the walk sprite
     public override void OnStartMove()
     {
         if (_state == PlayerState.Attacking || _state == PlayerState.Hit || _state == PlayerState.KnockedDown)
@@ -96,7 +96,7 @@ public class Player : Character
         Sprite = _walkSprite;
     }
 
-    // Override OnStopMove event to set the idle sprite
+    // Override OnStopMove from Character to set the idle sprite
     public override void OnStopMove()
     {
         if (_state == PlayerState.Attacking || _state == PlayerState.Hit || _state == PlayerState.KnockedDown)
@@ -105,12 +105,6 @@ public class Player : Character
         
         Sprite = _idleSprite;
     }
-
-    public override void Draw()
-    {
-        base.Draw();
-    }
-
     private void HandleInput()
     {
         // Movement/attack disabled while animation playing to stop spamming and unfinished animations
@@ -133,7 +127,6 @@ public class Player : Character
             Attack();
             return;
         }
-
 
         // Only updating movement if not attacking
         _state = Velocity.X != 0 ? PlayerState.Walking : PlayerState.Idle;
@@ -162,8 +155,6 @@ public class Player : Character
     {
         base.TakeDamage(dmg);
 
-        Console.WriteLine($"[Player] Took {dmg}"); // Just debugging
-
         if (Health <= 0)
         {
             Knockdown();
@@ -178,8 +169,8 @@ public class Player : Character
 
         Sprite = Random.Shared.Next(2) == 0 ? _hit1Sprite : _hit2Sprite;
     }
-
-
+    
+    // when player defeated
     private void Knockdown()
     {
         _state = PlayerState.KnockedDown;
@@ -188,7 +179,7 @@ public class Player : Character
         Sprite = _knockdownSprite;
     }
 
-    // Enemy-style timed state behaviour
+    // state changer
     private void UpdateState(GameTime gameTime)
     {
         switch (_state)
@@ -217,6 +208,7 @@ public class Player : Character
                 return;
         }
     }
+    // tries attacking when enemy within range
     private void TryDealDamageToEnemy()
     {
         if (_hasDealtDamageThisAttack || _enemyManager == null) return;
@@ -227,20 +219,13 @@ public class Player : Character
         float dist = Math.Abs(enemy.Position.X - Position.X);
         if (dist <= 250f)
         {
-            Console.WriteLine("[ATTACK HIT] -10 HP");
             enemy.TakeDamage(Damage);
             _hasDealtDamageThisAttack = true;
         }
     }
-
+    // access method
     public void SetEnemyManager(EnemyManager manager)
     {
         _enemyManager = manager;
     }
-    public bool IsAttacking()
-    {
-        return _state == PlayerState.Attacking;
-    }
-
-    public bool IsAlive() => _state != PlayerState.KnockedDown;
 }

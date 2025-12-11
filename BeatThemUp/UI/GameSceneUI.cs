@@ -470,6 +470,7 @@ public class GameSceneUI : ContainerRuntime
 
     public void ShowWinPanel()
     {
+        // same logic as Game Over
         _winPanel.IsVisible = true;
         _winRetryButton.IsFocused = true;
         _pausePanel.IsVisible = false;
