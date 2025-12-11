@@ -48,7 +48,7 @@ public class EnemyManager
     {
         foreach (var enemy in _enemies)
         {
-            enemy.Draw(spriteBatch);
+            enemy.Draw();
         }
     }
     

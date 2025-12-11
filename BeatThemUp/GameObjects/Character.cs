@@ -80,7 +80,7 @@ public class Character : Actor
         Health = 0;
     }
 
-    // Character t
+    // Character
     public virtual void TakeDamage(float amount)
     {
         OnTakeDamageEvent?.Invoke(amount);

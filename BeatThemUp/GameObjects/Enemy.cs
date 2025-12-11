@@ -7,7 +7,7 @@ using MonoGameLibrary.Graphics;
 
 namespace BeatThemUp.GameObjects;
 
-public class Enemy
+public class Enemy : Character
 {
     // enemy states
     private enum EnemyState
@@ -29,13 +29,8 @@ public class Enemy
     private AnimatedSprite current;
 
     // movement and player reference
-    private Vector2 position;
     private Character player;
     private float speed = 100f;
-
-    // health
-    private double hp;
-    private float maxHp;
 
     // states
     private EnemyState state = EnemyState.Walk;
@@ -46,7 +41,6 @@ public class Enemy
     private const float StopDistance = 300f;
 
     // retreat
-    private bool retreating;
     private float retreatDuration;
     private float retreatSpeed = 150f; // faster backwards movement
     
@@ -54,21 +48,8 @@ public class Enemy
     private float deathTimer = 0f;
     public bool Remove { get; private set; } = false;
     
-    // is dead
-    public bool IsDead => hp <= 0;
-
-    // getter for hp
-    public double GetHp() => hp;
-    // x and y movement for enemy
-    public Vector2 Position
-    {
-        get => position;
-        set => position = value - new Vector2(current.Width / 2, current.Height / 2); // for centre of sprite
-    }
-
     // constructor
     public Enemy(
-        float hp,
         AnimatedSprite walk,
         AnimatedSprite aboutToPunch, AnimatedSprite punching,
         AnimatedSprite aboutToKick, AnimatedSprite kicking,
@@ -76,8 +57,6 @@ public class Enemy
         AnimatedSprite defeated, AnimatedSprite walkBack, AnimatedSprite idle,
         Vector2 position, Character player)
     {
-        this.hp = hp;
-        maxHp = hp;
         this.walk = walk;
 
         this.aboutToPunch = aboutToPunch;
@@ -91,7 +70,7 @@ public class Enemy
         this.defeated = defeated;
         this.walkBack = walkBack;
         this.idle = idle;
-        this.position = position;
+        this.Position = position;
         this.player = player;
 
         UpdateCurrentSprite();
@@ -113,12 +92,13 @@ public class Enemy
             EnemyState.Retreat     => walkBack,
             _ => walk
         };
+        Sprite = current;
     }
 
     // distance of player and enemy
     private float PlayerDist()
     {
-        float enemyCenterX = position.X + 64f;
+        float enemyCenterX = Position.X + 64f;
         float playerX = player.Position.X;
 
         return enemyCenterX - playerX;
@@ -130,7 +110,7 @@ public class Enemy
         return distance > 0f;
     }
     // calls functions from enum states
-    public void Update(GameTime gameTime)
+    public override void Update(GameTime gameTime)
     {
         float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
         stateTimer += dt;
@@ -180,7 +160,7 @@ public class Enemy
     // death behavior *****have to test when player attacks is implemented*****
     private bool HandleDeath(GameTime gameTime)
     {
-        if (hp > 0)
+        if (Health > 0)
             return false;
 
         if (state != EnemyState.Defeated)
@@ -206,7 +186,7 @@ public class Enemy
     private void UpdateWalk(float dt, float dist)
     {
         if (PlayerIsLeft() && dist > StopDistance)
-            position.X -= speed * dt;
+            Position.X -= speed * dt;
 
         if (stateTimer > 1f && InAttackRange(dist))
         {
@@ -271,7 +251,7 @@ public class Enemy
     private void UpdateRetreat(float dt)
     {
         // Move backwards to the right
-        position.X += retreatSpeed * dt;
+        Position.X += retreatSpeed * dt;
 
         if (stateTimer >= retreatDuration)
         {
@@ -297,12 +277,12 @@ public class Enemy
         player.TakeDamage(50);
     }
 
-    public void TakeDamage(double damage)
+    public override void TakeDamage(float damage)
     {
-        hp -= damage;
-        Console.WriteLine($"[Enemy] Took {damage}. HP now {hp}");
+        base.TakeDamage(damage);
+        Console.WriteLine($"[Enemy] Took {damage}. Health now {Health}");
 
-        if (hp <= 0)
+        if (Health <= 0)
         {
             state = EnemyState.Defeated;
             stateTimer = 0f;
@@ -311,13 +291,15 @@ public class Enemy
 
         state = EnemyState.GettingHit;
         stateTimer = 0f;
-        current = gettingHit; // << play the animation here
+        
     }
 
 
-    public void Draw(SpriteBatch spriteBatch)
+    public override void Draw()
     {
-        if (IsDead && state != EnemyState.Defeated)
+
+        var spriteBatch = Core.SpriteBatch;
+        if (Health <= 0 && state != EnemyState.Defeated)
             return;
 
         current.Effects = SpriteEffects.FlipHorizontally; // to face left
@@ -327,17 +309,17 @@ public class Enemy
 
         float offsetY = GetAnimationOffsetY() * current.Scale.Y;
 
-        Vector2 drawPos = position + new Vector2(64, offsetY); // centre of 128px
+        Vector2 drawPos = Position + new Vector2(64, offsetY); // centre of 128px
 
-        // HP bar
-        if (!IsDead)
+        // Health bar
+        if (Health > 0)
         {
-            float healthPercent = (float)(hp / maxHp);
+            float Healthealthercent = (float)(Health / MaxHealth);
 
             int barWidth = 80;
             int barHeight = 10;
 
-            Vector2 barPos = new Vector2(position.X + 64 - barWidth / 2, position.Y - 40);
+            Vector2 barPos = new Vector2(Position.X + 64 - barWidth / 2, Position.Y - 40);
 
             // background
             spriteBatch.Draw(TextureManager.Pixel,
@@ -346,7 +328,7 @@ public class Enemy
 
             // foreground
             spriteBatch.Draw(TextureManager.Pixel,
-                new Rectangle((int)barPos.X-70, (int)barPos.Y-130, (int)(barWidth * healthPercent), barHeight),
+                new Rectangle((int)barPos.X-70, (int)barPos.Y-130, (int)(barWidth * Healthealthercent), barHeight),
                 Color.LimeGreen);
         }
         

@@ -185,7 +185,6 @@ public class GameScene : Scene
 
         
         var tiger = new Enemy(
-            100f,
             tigerWalk,
             tigerPunch,      // aboutToPunch
             tigerPunch,      // punching
