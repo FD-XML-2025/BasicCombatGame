@@ -12,8 +12,9 @@ public class Character : Actor
     
     private float _maxHealth = 100f;
 
+    // Needs implementation
     private Weapon _weapon;
-
+    // Needs implementation
     private bool _isParrying;
     
     private bool _wasMoving;
@@ -29,6 +30,8 @@ public class Character : Actor
 
     public AnimatedSprite Sprite { get; set; }
 
+    // NEEDS IMPLEMENTATION
+    /*
     public Weapon Weapon
     {
         get => _weapon;
@@ -39,7 +42,7 @@ public class Character : Actor
     {
         return Weapon != null;
     }
-
+    */
     public float Health
     {
         get => _health;
@@ -74,12 +77,6 @@ public class Character : Actor
         Health += amount;
     }
 
-    // Kill the character, means set health to 0
-    public void Kill()
-    {
-        Health = 0;
-    }
-
     // Character
     public virtual void TakeDamage(float amount)
     {
@@ -93,11 +90,14 @@ public class Character : Actor
         OnDeathEvent?.Invoke();
     }
 
+    // NEEDS IMPLEMENTATION
+    /*
     public bool IsParrying
     {
         get => _isParrying;
         set => _isParrying = value;
     }
+    */
 
     /// <summary>
     /// Event that is raised if it is detected that the head segment of the slime
@@ -117,13 +117,7 @@ public class Character : Actor
         Scale = new Vector2(2f, 2f);
     }
     
-    // Determine wether the character is idle
-    public bool IsIdle()
-    {
-        return Velocity ==  Vector2.Zero;
-    }
-
-    // Determine wether the character is walking
+    // Determine whether the character is walking
     public bool IsWalking()
     {
         return Velocity.Length() > 0;
