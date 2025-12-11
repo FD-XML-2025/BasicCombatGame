@@ -24,7 +24,6 @@ public class Enemy : Character
     }
 
     // animations
-    // animations
     private AnimatedSprite walk, aboutToPunch, punching, aboutToKick, kicking, defeated, walkBack, idle, gettingHit;
     private AnimatedSprite current;
 
@@ -42,7 +41,7 @@ public class Enemy : Character
 
     // retreat
     private float retreatDuration;
-    private float retreatSpeed = 150f; // faster backwards movement
+    private float retreatSpeed = 150f; // faster backwards movement than forwards
     
     // handle death
     private float deathTimer = 0f;
@@ -65,7 +64,7 @@ public class Enemy : Character
         this.aboutToKick = aboutToKick;
         this.kicking = kicking;
 
-        this.gettingHit = gettingHit;   // Important
+        this.gettingHit = gettingHit;
 
         this.defeated = defeated;
         this.walkBack = walkBack;
@@ -76,7 +75,7 @@ public class Enemy : Character
         UpdateCurrentSprite();
     }
 
-    // choose sprite based on current state
+    // chooses sprite based on current state
     private void UpdateCurrentSprite()
     {
         current = state switch
@@ -95,7 +94,7 @@ public class Enemy : Character
         Sprite = current;
     }
 
-    // distance of player and enemy
+    // distance between player and enemy
     private float PlayerDist()
     {
         float enemyCenterX = Position.X + 64f;
@@ -103,7 +102,8 @@ public class Enemy : Character
 
         return enemyCenterX - playerX;
     }
-    // checks player is left
+    /* checks that player is on left side just in case
+     invisible wall that prevents player from passing tiger doesn't work */
     private bool PlayerIsLeft()
     {
         float distance = PlayerDist();
@@ -121,7 +121,7 @@ public class Enemy : Character
 
         float dist = PlayerDist();
 
-        // main state machine
+        // state machine (chooses states)
         switch (state)
         {
             case EnemyState.Walk:
@@ -157,7 +157,7 @@ public class Enemy : Character
         current.Update(gameTime);
     }
 
-    // death behavior *****have to test when player attacks is implemented*****
+    // death behaviour
     private bool HandleDeath(GameTime gameTime)
     {
         if (Health > 0)
@@ -170,19 +170,19 @@ public class Enemy : Character
             deathTimer = 0f;
         }
 
-        // Play defeated animation
+        // defeated animation
         current = defeated;
         current.Update(gameTime);
 
-        // Count time before removal
+        // after death tiger stays visible for 1 second, so that tiger defeated animation is visible
         deathTimer += (float)gameTime.ElapsedGameTime.TotalSeconds;
-        if (deathTimer > 1.0f)  // <- adjust to how long you want it visible
+        if (deathTimer > 1.0f)
             Remove = true;
 
         return true;
     }
 
-    // walking and approaching player
+    // approaching player
     private void UpdateWalk(float dt, float dist)
     {
         if (PlayerIsLeft() && dist > StopDistance)
@@ -197,7 +197,7 @@ public class Enemy : Character
                 : EnemyState.AboutToKick;
         }
     }
-
+    // deciding if enemy can attack
     private bool InAttackRange(float dist)
     {
         return PlayerIsLeft() && dist <= AttackRange && dist > 0f;
@@ -241,21 +241,23 @@ public class Enemy : Character
         }
     }
 
+    // retreating backwards for a short amount of time
     private void StartRetreat()
     {
         state = EnemyState.Retreat;
         stateTimer = 0f;
         retreatDuration = Random.Shared.NextSingle() + 0.5f;
     }
-
+    
+    // after retreat enemy returns to idle
     private void UpdateRetreat(float dt)
     {
-        // Move backwards to the right
+        // move backwards to the right
         Position.X += retreatSpeed * dt;
 
         if (stateTimer >= retreatDuration)
         {
-            // After retreat idle briefly
+            // after retreat, idle briefly
             state = EnemyState.Idle;
             stateTimer = 0f;
         }
@@ -264,23 +266,23 @@ public class Enemy : Character
     // when enemy takes a hit
     private void UpdateHitReaction()
     {
-        if (stateTimer > 0.4f)       // Always return to idle, not only when player walks
+        if (stateTimer > 0.4f)       // always return to idle, not only when player walks
         {
             state = EnemyState.Idle;
             stateTimer = 0f;
         }
     }
     
+    // enemy attack
     public void Attack()
     {
-        Console.WriteLine("[Enemy] ATTACK fired");
         player.TakeDamage(50);
     }
 
+    // how much damage the enemy does to the player
     public override void TakeDamage(float damage)
     {
         base.TakeDamage(damage);
-        Console.WriteLine($"[Enemy] Took {damage}. Health now {Health}");
 
         if (Health <= 0)
         {
@@ -294,51 +296,47 @@ public class Enemy : Character
         
     }
 
-
+    // draws animations, including hp bar
     public override void Draw()
     {
-
         var spriteBatch = Core.SpriteBatch;
         if (Health <= 0 && state != EnemyState.Defeated)
             return;
 
         current.Effects = SpriteEffects.FlipHorizontally; // to face left
 
-        current.Origin = new Vector2(current.Width / 2f, 62f); // middle, feet pos
+        current.Origin = new Vector2(current.Width / 2f, 62f); // parameters(middle, feet pos)
         current.Scale = new Vector2(2f, 2f);
 
         float offsetY = GetAnimationOffsetY() * current.Scale.Y;
 
-        Vector2 drawPos = Position + new Vector2(64, offsetY); // centre of 128px
+        Vector2 drawPos = Position + new Vector2(64, offsetY); // centre of 128px (size of tiger)
 
-        // Health bar
+        // health bar for enemy
         if (Health > 0)
         {
-            float Healthealthercent = (float)(Health / MaxHealth);
+            float healthpercent = (float)(Health / MaxHealth);
 
             int barWidth = 80;
             int barHeight = 10;
 
             Vector2 barPos = new Vector2(Position.X + 64 - barWidth / 2, Position.Y - 40);
 
-            // background
+            // bottom (red part)
             spriteBatch.Draw(TextureManager.Pixel,
                 new Rectangle((int)barPos.X-70, (int)barPos.Y-130, barWidth, barHeight),
                 Color.DarkRed);
 
-            // foreground
+            // top (green part)
             spriteBatch.Draw(TextureManager.Pixel,
-                new Rectangle((int)barPos.X-70, (int)barPos.Y-130, (int)(barWidth * Healthealthercent), barHeight),
+                new Rectangle((int)barPos.X-70, (int)barPos.Y-130, (int)(barWidth * healthpercent), barHeight),
                 Color.LimeGreen);
         }
-        
-        
-        
         current.Draw(spriteBatch, drawPos);
     }
-
     
-    // images aren't even so fixes that
+    /* images aren't even so fixes that by offsetting the images.
+     Could likely be done when parsing in XML but this seemed like an easier solution. */
     private float GetAnimationOffsetY()
     {
         return state switch
@@ -350,5 +348,4 @@ public class Enemy : Character
             _                      => 0f
         };
     }
-    public bool IsAttacking() => state == EnemyState.Punching || state == EnemyState.Kicking;
 }
