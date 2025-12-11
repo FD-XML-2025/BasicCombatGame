@@ -1,6 +1,10 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
+/// <summary>
+/// Static class to manage enemy health bar
+/// for colorizing pixels
+/// </summary>
 public static class TextureManager
 {
     public static Texture2D Pixel;

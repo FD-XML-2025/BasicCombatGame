@@ -41,6 +41,10 @@ public class Game1 : Core
         ApplySavedSettings();
     }
 
+    /// <summary>
+    /// This load game saved settings from XML file
+    /// to apply them to the game
+    /// </summary>
     private void ApplySavedSettings()
     {
         // Load settings from XML

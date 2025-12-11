@@ -4,6 +4,9 @@ using MonoGameLibrary.Graphics;
 
 namespace BeatThemUp.GameObjects;
 
+/// <summary>
+/// Base player class with all logics
+/// </summary>
 public class Player : Character
 {
     private enum PlayerState

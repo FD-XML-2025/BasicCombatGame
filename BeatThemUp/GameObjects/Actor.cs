@@ -2,6 +2,11 @@
 
 namespace BeatThemUp.GameObjects;
 
+/// <summary>
+/// Abstract base class for all game actors.
+/// If you need to create an object that have a position in the game world,
+/// this is the class to extend.
+/// </summary>
 public abstract class Actor
 {
     /// <summary>
@@ -15,8 +20,10 @@ public abstract class Actor
 
     public Vector2 Scale;
     
+    // Rotation of the actor in radians.
     public float Rotation { get; set; }
     
+    // Whether the actor is active or not.
     public bool IsActive { get; set; } = true;
 
     public virtual void Initialize()

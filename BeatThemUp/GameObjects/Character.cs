@@ -5,6 +5,10 @@ using MonoGameLibrary.Graphics;
 
 namespace BeatThemUp.GameObjects;
 
+/// <summary>
+/// Base Character class, if you want to create a new character, extend this class
+/// it provides health and movement logics
+/// </summary>
 public class Character : Actor
 {
     // The AnimatedSprite used when drawing each slime segment
@@ -60,6 +64,7 @@ public class Character : Actor
         }
     }
     
+    // Max health of the character
     public float MaxHealth
     {
         get => _maxHealth;
@@ -77,7 +82,7 @@ public class Character : Actor
         Health += amount;
     }
 
-    // Character
+    // Perform taking damage
     public virtual void TakeDamage(float amount)
     {
         OnTakeDamageEvent?.Invoke(amount);
@@ -171,6 +176,7 @@ public class Character : Actor
         return bounds;
     }
     
+    // Called when character starts moving
     public virtual void OnStartMove()
     {
         if (_wasMoving) return;
@@ -178,6 +184,7 @@ public class Character : Actor
         _wasMoving = true;
     }
 
+    // Called when character stops moving
     public virtual void OnStopMove()
     {
         if (!_wasMoving) return;

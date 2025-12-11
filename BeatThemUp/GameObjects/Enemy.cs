@@ -7,6 +7,9 @@ using MonoGameLibrary.Graphics;
 
 namespace BeatThemUp.GameObjects;
 
+/// <summary>
+/// Base enemy logics and AI
+/// </summary>
 public class Enemy : Character
 {
     // enemy states
@@ -276,7 +279,8 @@ public class Enemy : Character
     // enemy attack
     public void Attack()
     {
-        player.TakeDamage(50);
+        float damage = Random.Shared.Next(10, 30);
+        player.TakeDamage(damage);
     }
 
     // how much damage the enemy does to the player

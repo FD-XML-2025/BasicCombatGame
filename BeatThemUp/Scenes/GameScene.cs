@@ -357,6 +357,11 @@ public class GameScene : Scene
         SaveGame(isGameOver);
     }
 
+    /// <summary>
+    /// Save game data to XML file, by incrementing indicators
+    /// Used for game ending (lose and win)
+    /// </summary>
+    /// <param name="isGameOver"></param>
     private void SaveGame(bool isGameOver)
     {
         XMLManager<SaveData> xmlManager = new XMLManager<SaveData>();
@@ -372,6 +377,7 @@ public class GameScene : Scene
         xmlManager.Save("Content/xml/save.xml", newSave);
     }
 
+    // On Game won, show panel
     private void GameWon()
     {
         _state = GameState.Win;
@@ -379,6 +385,7 @@ public class GameScene : Scene
         _saturation = 1.0f;
     }
 
+    // On Game over, show panel
     private void GameOver()
     {
         // Show the game over panel
@@ -391,6 +398,7 @@ public class GameScene : Scene
         _saturation = 1.0f;
     }
 
+    // Draws the scene used objects
     public override void Draw(GameTime gameTime)
     {
         // Clear the back buffer.

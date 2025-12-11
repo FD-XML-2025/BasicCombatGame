@@ -1,10 +1,19 @@
 using System;
 using Microsoft.Xna.Framework;
 
+/// <summary>
+/// Timer object usable to create simple countdowns
+/// used in game scene to manage game duration
+/// </summary>
 public class Timer
 {
+    // Timer duration
     private float _duration;
+    
+    // Time elapsed since the timer started
     private float _elapsed;
+    
+    // Determine if the timer is running
     private bool _isRunning;
     
     public Timer(float duration)

@@ -3,6 +3,9 @@ using MonoGameLibrary.Graphics;
 
 namespace BeatThemUp.GameObjects;
 
+/// <summary>
+/// Base class for all weapons.
+/// </summary>
 public class Weapon
 {
     private Sprite _sprite;
@@ -15,6 +18,7 @@ public class Weapon
     
     private float _fireRateMultiplier;
     
+    // Damage bonus multiplier
     public float DamageMultiplier
     {
         get { return _damageMultiplier; }
@@ -26,6 +30,7 @@ public class Weapon
         }
     }
     
+    // Fire rate bonus multiplier
     public float FireRateMultiplier
     {
         get => _fireRateMultiplier;
