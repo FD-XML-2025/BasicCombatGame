@@ -49,7 +49,7 @@ public class GameScene : Scene
     private GameState _state;
 
     // The grayscale shader effect.
-    private Effect _grayscaleEffect;
+    //private Effect _grayscaleEffect;
 
     // The amount of saturation to provide the grayscale shader effect
     private float _saturation = 1.0f;
@@ -246,7 +246,7 @@ public class GameScene : Scene
         _collectSoundEffect = Content.Load<SoundEffect>("audio/collect");
 
         // Load the grayscale effect
-        _grayscaleEffect = Content.Load<Effect>("effects/grayscaleEffect");
+        //_grayscaleEffect = Content.Load<Effect>("effects/grayscaleEffect");
         
         TextureManager.Init(Core.GraphicsDevice);
     }
@@ -404,7 +404,7 @@ public class GameScene : Scene
         // Clear the back buffer.
         Core.GraphicsDevice.Clear(Color.CornflowerBlue);
         
-        if (_state != GameState.Playing)
+        /*if (_state != GameState.Playing)
         {
             // We are in a game over state, so apply the saturation parameter.
             _grayscaleEffect.Parameters["Saturation"].SetValue(_saturation);
@@ -416,7 +416,8 @@ public class GameScene : Scene
         {
             // Otherwise, just begin the sprite batch as normal.
             Core.SpriteBatch.Begin(samplerState: SamplerState.PointClamp);
-        }
+        }*/
+        Core.SpriteBatch.Begin(samplerState: SamplerState.PointClamp);
         Core.SpriteBatch.Draw(_backgroundTexture, _backgroundRect, Color.White);
         // Draw the player.
         _player.Draw();
